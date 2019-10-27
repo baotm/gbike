@@ -1,0 +1,34 @@
+{
+   "data": [
+        {
+            "id": 1,
+            "ten": "Fianna",
+            "sodienthoai": "306-467-3804",
+            "mondo": "Isuzu",
+            "sotien": 23000000,
+            "hinhanh": "CR61 7204 9938 8295 4616 8",
+            "ngaycam": "25/05/2019",
+            "ngaychuoc": "12-10-2019",
+            "trinhtrang": "DaChuoc",
+            "tienno": 154624,
+            "tienlai": 432939,
+            "laixuat": "6",
+            "ghichu": "Universal radical encryption"
+        },
+        {
+            "id": 2,
+            "ten": "Tracey",
+            "sodienthoai": "489-694-1903",
+            "mondo": "Nissan",
+            "sotien": 29000000,
+            "hinhanh": "CY38 3790 5863 SJFW 5RJX RBLX E6S5",
+            "ngaycam": "03/04/2019",
+            "ngaychuoc": "19-04-2019",
+            "trinhtrang": "DangCam",
+            "tienno": 211588,
+            "tienlai": 340420,
+            "laixuat": "6",
+            "ghichu": "Seamless multimedia access"
+        }
+    ]
+}
