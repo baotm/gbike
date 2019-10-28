@@ -22,6 +22,10 @@
       font-size: 20px;
       color: red;
     }
+
+    .modal-body input[type=text] {
+      display: none;
+    }
   </style>
 
 </head>
@@ -193,18 +197,132 @@
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span>
           </button>
-          <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+          <h4 class="modal-title" id="modal_title"></h4>
         </div>
         <div class="modal-body">
-          <h4>id </h4>
-          <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur et. Vivamus sagittis lacus vel augue
-            laoreet rutrum faucibus dolor auctor.</p>
-          <p>Aenean lacinia bibendum nulla sed consectetur. Praesent commodo cursus magna, vel scelerisque nisl
-            consectetur et. Donec sed odio dui. Donec ullamcorper nulla non metus auctor fringilla.</p>
+            <div class="container-fluid">
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="row">
+                      <div class="col-md-6">
+                          <table class="modal_info table table-hover table-sm">
+                              <tr>
+                                <th>Mã</th>
+                                <th>
+                                  <div><span id="modal_id"></span></div>
+                                </th>
+                                <th></th>
+                              </tr>
+                              <tr>
+                                <td>Tên</td>
+                                <td>
+                                  <div><span id="modal_name"></span><input type="text" id="imodal_name" /></div>
+                                </td>
+                                <td><button onclick="show('modal_name')">Change</button></td>
+                              </tr>
+                              <tr>
+                                <td>Phone</td>
+                                <td>
+                                  <div><span id="modal_phone"></span><input type="text" id="imodal_phone" /></div>
+                                </td>
+                                <td><button onclick="show('modal_phone')"> Change</button></td>
+                              </tr>
+                              <tr>
+                                <td>Món đồ</td>
+                                <td>
+                                  <div><span id="modal_mondo"></span><input type="text" id="imodal_mondo" /></div>
+                                </td>
+                                <td><button onclick="show('modal_mondo')">Change</button></td>
+                              </tr>
+                              <tr>
+                                <td>Số Tiền</td>
+                                <td>
+                                  <div><span id="modal_money"></span><input type="text" id="imodal_money" /></div>
+                                </td>
+                                <td><button onclick="show('modal_money')">Change</button></td>
+                              </tr>
+                              <tr>
+                                <td>Hình Ảnh</td>
+                                <td>
+                                  <div><span id="modal_pic"></span><input type="text" id="imodal_pic" /></div>
+                                </td>
+                                <td><button onclick="show('modal_pic')">Change</button></td>
+                              </tr>
+                              <tr>
+                                <td>Ngày Cầm</td>
+                                <td>
+                                  <div><span id="modal_ngaycam"></span><input type="text" id="imodal_ngaycam" /></div>
+                                </td>
+                                <td><button onclick="show('modal_ngaycam')">Change</button></td>
+                              </tr>
+                              <tr>
+                                <td>Ngày Chuộc</td>
+                                <td>
+                                  <div><span id="modal_ngaychuoc"></span><input type="text" id="imodal_ngaychuoc" /></div>
+                                </td>
+                                <td><button onclick="show('modal_ngaychuoc')"> Change</button></td>
+                              </tr>
+                              <tr>
+                                <td>Tình trạng</td>
+                                <td>
+                                  <div><span id="modal_tinhtrang"></span><input type="text" id="imodal_tinhtrang" /></div>
+                                </td>
+                                <td><button onclick="show('modal_tinhtrang')">Change</button></td>
+                              </tr>
+                              <tr>
+                                <td>Tiền Nợ</td>
+                                <td>
+                                  <div><span id="modal_tienno"></span><input type="text" id="imodal_tienno" /></div>
+                                </td>
+                                <td><button onclick="show('modal_tienno')">Change</button></td>
+                              </tr>
+                              <tr>
+                                <td>Tiền Lãi</td>
+                                <td>
+                                  <div><span id="modal_tienlai"></span>
+                                </td>
+                                <td></td>
+                              </tr>
+                              <tr>
+                                <td>Lãi Xuất</td>
+                                <td>
+                                  <div><span id="modal_laixuat"></span><input type="text" id="imodal_laixuat" /></div>
+                                </td>
+                                <td><button onclick="show('modal_laixuat')">Change</button></td>
+                              </tr>
+                              <tr>
+                                <td>Ghi Chú</td>
+                                <td>
+                                  <div><span id="modal_ghichu"></span><input type="text" id="imodal_ghichu" /></div>
+                                </td>
+                                <td><button onclick="show('modal_ghichu')">Change</button></td>
+                              </tr>
+                            </table>
+                      </div>
+                      <div class="col-md-6">
+                          <div>
+                              Món Đồ : <span id="detail_id"></span>
+                              <address>
+                                <strong>Ngày Cầm : <span id="detail_ngaycam"></span></strong>
+                                <strong>Tiền Lãi : <span id="detail_ngaycam"></span></strong>
+                                <strong>Ngày Tới Hạn Đóng Lãi : <span id="detail_ngaycam"></span></strong>
+                                <strong>Đóng Lãi : <span id="detail_ngaycam"></span></strong>
+                                <br>Email: <a href="/cdn-cgi/l/email-protection" class="__cf_email__"
+                                  data-cfemail="3c5653527c554e53525d58515552125f5351">[email&#160;protected]</a>
+                              </address>
+                            </div>
+      
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+         
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
           <button type="button" class="btn btn-primary">Save changes</button>
+          <button type="button" class="btn btn-primary">In Hóa Đơn</button>
         </div>
 
       </div>
@@ -219,9 +337,30 @@
 
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.js"></script>
 <script>
+  function show(id) {
+
+    a = id;
+
+    var query = $('#' + a);
+
+    // check if element is Visible
+    var isVisible = query.is(':visible');
+
+    if (isVisible === true) {
+      // element is Visible
+
+      $("#" + a).hide();
+      $("#i" + a).show();
+    } else {
+      // element is Hidden
+
+      $("#" + a).show();
+      $("#i" + a).hide();
+    }
+  }
   $(document).ready(function () {
 
-    $('#table_id').DataTable({
+    var table = $('#table_id').DataTable({
       "ajax": '/ajax_pawn_item_get_all',
       "columns": [
         { "data": "ten" },
@@ -230,22 +369,75 @@
         { "data": "ngaycam" },
         { "data": "trinhtrang" },
         { "data": "laixuat" },
-        { "defaultContent": '<i class="fa fa-edit editor_pic btnEdit" data-id=""></i> <span class="text-muted"></span>' }
+        { "defaultContent": '<i class="fa fa-edit editor_pic btnEdit"></i> <span class="text-muted"></span>' }
       ]
     });
+    $('#table_id tbody').on('click', 'tr', function () {
+      if ($(this).hasClass('selected')) {
+        _r = this.closest('tr')
+        rowSelect = table.row(_r).data();
+        DataId = rowSelect.id;
+        //get ajax call ajax_pawn_item_get
+        _url = "ajax_pawn_item_get?id=" + DataId;
 
-    $('.btnEdit').click(function () {
-      var DataId = this.dataset.id;
-      //get ajax call ajax_pawn_item_get
-      _url = "ajax_pawn_item_get?id=" + DataId;
+        $.ajax({
+          url: _url
+        }).done(function (data) {
+          //data for modal
+          info = data[0];
+          $('#modal_title').html('Thông Tin Cho Mã Đồ :' + info.id);
+          $('#modal_id').text(info.id);
 
-      $.ajax({
-        url: _url
-      }).done(function (data) {
-        $('.bs-example-modal-lg').modal();
-        console.log(data);
-      });
-    })
+          $('#modal_name').text(info.ten);
+          $('#imodal_name').val(info.ten);
+
+          $('#modal_phone').text(info.sodienthoai);
+          $('#imodal_phone').val(info.sodienthoai);
+
+          $('#modal_mondo').text(info.mondo);
+          $('#imodal_mondo').val(info.mondo);
+
+          $('#modal_money').text(info.sotien);
+          $('#imodal_money').val(info.sotien);
+
+          $('#modal_pic').text(info.hinhanh);
+          $('#imodal_pic').val(info.hinhanh);
+
+          $('#modal_ngaycam').text(info.ngaycam);
+          $('#imodal_ngaycam').val(info.ngaycam);
+
+          $('#modal_ngaychuoc').text(info.ngaychuoc);
+          $('#imodal_ngaychuoc').val(info.ngaychuoc);
+
+          $('#modal_tinhtrang').text(info.trinhtrang);
+          $('#imodal_tinhtrang').val(info.trinhtrang);
+
+          $('#modal_tienno').text(info.tienno);
+          $('#imodal_tienno').val(info.tienno);
+
+          $('#modal_laixuat').text(info.laixuat);
+          $('#imodal_laixuat').val(info.laixuat);
+
+          var tienlai = 1000;
+          $('#modal_tienlai').text(tienlai);
+
+          $('#modal_ghichu').val(info.ghichu);
+          $('#imodal_ghichu').text(info.ghichu);
+
+
+          $('.bs-example-modal-lg').modal();
+
+          console.log(data);
+        });
+        $(this).removeClass('selected');
+      }
+      else {
+        table.$('tr.selected').removeClass('selected');
+        $(this).addClass('selected');
+      }
+    });
+
+
 
 
   });

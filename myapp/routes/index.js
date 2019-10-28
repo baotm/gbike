@@ -80,6 +80,9 @@ router.get('/ajax_pawn_item_get_all', function (req, res) {
   _re+='}';
   res.send(_re);
 })
+route.get('/qr_invoice',function(req,res){
+
+});
 router.get('/login', function (req, res) {
   act = req.query.action;
 
