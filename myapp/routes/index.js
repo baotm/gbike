@@ -25,7 +25,7 @@ router.get('/', function (req, res, next) {
         res.render('admin', { title: name, acc_name: info.name, acc_avatar: info.avatar })
       } break;
       case 'sale': {
-        res.render('sale', { title: name })
+        res.render('nhanvien/index',{ title: name, acc_name: info.name, acc_avatar: info.avatar })
       } break;
       case 'tech': {
         res.render('tech', { title: name })
@@ -80,9 +80,8 @@ router.get('/ajax_pawn_item_get_all', function (req, res) {
   _re+='}';
   res.send(_re);
 })
-route.get('/qr_invoice',function(req,res){
 
-});
+
 router.get('/login', function (req, res) {
   act = req.query.action;
 
