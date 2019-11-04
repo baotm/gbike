@@ -22,7 +22,7 @@ router.get('/', function (req, res, next) {
 
     switch (role) {
       case 'admin': {
-        res.render('admin', { title: name, acc_name: info.name, acc_avatar: info.avatar })
+        res.render('admin_1', { title: name, acc_name: info.name, acc_avatar: info.avatar })
       } break;
       case 'sale': {
         res.render('nhanvien/index',{ title: name, acc_name: info.name, acc_avatar: info.avatar })
@@ -81,6 +81,10 @@ router.get('/ajax_pawn_item_get_all', function (req, res) {
   res.send(_re);
 })
 
+
+router.get('/abc',function(req,res){
+  //res.render('index')
+})
 
 router.get('/login', function (req, res) {
   act = req.query.action;
