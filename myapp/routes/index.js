@@ -39,6 +39,9 @@ router.get('/logout', function (req, res) {
   req.session.destroy();
   res.redirect('/login?action=first');
 });
+router.get('/bill',function(req,res){
+  res.render('bill');
+})
 router.post('/checklogin', function (req, res) {
 
   user = req.body.user;
