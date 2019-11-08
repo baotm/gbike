@@ -25,7 +25,7 @@ router.get('/', function (req, res, next) {
         res.render('admin_1', { title: name, acc_name: info.name, acc_avatar: info.avatar })
       } break;
       case 'sale': {
-        res.render('nhanvien/index',{ title: name, acc_name: info.name, acc_avatar: info.avatar })
+        res.render('nhanvien/index', { title: name, acc_name: info.name, acc_avatar: info.avatar })
       } break;
       case 'tech': {
         res.render('tech', { title: name })
@@ -39,8 +39,40 @@ router.get('/logout', function (req, res) {
   req.session.destroy();
   res.redirect('/login?action=first');
 });
-router.get('/bill',function(req,res){
-  res.render('bill');
+router.get('upload_picture', function (req, res) {
+  res.send('abc')
+});
+router.get('/bill', function (req, res) {
+  name = req.query.name;
+  phone = req.query.phone;
+  money = req.query.money;
+  sale = req.query.sale;
+  cmnd = req.query.cmnd;
+  cmnd_date = req.query.cmnd_date;
+  date_p = req.query.date_p;
+  item_name = req.query.item_name;
+  item_color = req.query.item_color;
+  item_tinhtrang = req.query.tinhtrang;
+  laixuat = req.query.laixuat;
+  ghichu = req.query.ghichu;
+  cavet = req.query.cavet
+
+  res.render('bill', {
+    id: 1,
+    name: name,
+    phone: phone,
+    money: money,
+    cmnd_date: cmnd_date,
+    cmnd: cmnd,
+    sale: sale,
+    date_p: date_p,
+    item_name: item_name,
+    item_color: item_color,
+    item_tinhtrang: item_tinhtrang,
+    laixuat: laixuat,
+    ghichu: ghichu,
+    cavet: cavet
+  });
 })
 router.post('/checklogin', function (req, res) {
 
@@ -67,9 +99,9 @@ function getAccount(user, pass) {
   return res;
 }
 router.get('/ajax_pawn_item_get', function (req, res) {
-  id =req.query.id;
+  id = req.query.id;
   var connection = getConnect();
-  re = connection.query('SELECT * FROM docam WHERE id='+id);
+  re = connection.query('SELECT * FROM docam WHERE id=' + id);
   connection.dispose();
   res.send(re);
 })
@@ -79,13 +111,13 @@ router.get('/ajax_pawn_item_get_all', function (req, res) {
   _re = '{"data":';
   re = connection.query('SELECT * FROM docam');
   connection.dispose();
-  _re+=JSON.stringify(re);
-  _re+='}';
+  _re += JSON.stringify(re);
+  _re += '}';
   res.send(_re);
 })
 
 
-router.get('/abc',function(req,res){
+router.get('/abc', function (req, res) {
   //res.render('index')
 })
 

@@ -140,6 +140,7 @@
                         </ul>
                     </nav>
                 </div>
+
             </div>
             <!-- /top navigation -->
 
@@ -167,37 +168,38 @@
                                     <div class="col-md-6 col-sm-6  form-group has-feedback">
 
                                         <input type="text" name="name" class="form-control has-feedback-left"
-                                            id="inputSuccess2" placeholder="Họ tên">
+                                            id="ipt_name" placeholder="Họ tên">
                                         <span class="fa fa-user form-control-feedback left" aria-hidden="true"></span>
                                     </div>
 
                                     <div class="col-md-6 col-sm-6  form-group has-feedback">
-                                        <input type="text" name="phone" class="form-control" id="inputSuccess3"
-                                            placeholder="Số Điện thoại">
+                                        <input id="ipt_phone" type="text" name="phone" class="form-control"
+                                            id="inputSuccess3" placeholder="Số Điện thoại">
                                         <span class="fa fa-user form-control-feedback right" aria-hidden="true"></span>
                                     </div>
 
                                     <div class="col-md-6 col-sm-6  form-group has-feedback">
                                         <input type="text" name="money" class="form-control has-feedback-left"
-                                            id="inputSuccess4" placeholder="Số tiền">
+                                            id="ipt_money" placeholder="Số tiền">
                                         <span class="fa fa-envelope form-control-feedback left"
                                             aria-hidden="true"></span>
                                     </div>
                                     <div class="col-md-6 col-sm-6  form-group has-feedback">
-                                        <input type="text" name="sale" class="form-control has-feedback-left"
-                                            id="inputSuccess4" placeholder="Nhân viên" readonly="readonly">
+                                        <input type="text" value="<%= acc_name %>" name="sale"
+                                            class="form-control has-feedback-left" id="ipt_sale" placeholder="Nhân viên"
+                                            readonly="readonly">
                                         <span class="fa fa-envelope form-control-feedback right"
                                             aria-hidden="true"></span>
                                     </div>
                                     <div class="col-md-6 col-sm-6  form-group has-feedback">
                                         <input type="text" name="cmnd" class="form-control has-feedback-left"
-                                            id="inputSuccess4" placeholder="CMND">
+                                            id="ipt_cmnd" placeholder="CMND">
                                         <span class="fa fa-envelope form-control-feedback left"
                                             aria-hidden="true"></span>
                                     </div>
                                     <div class="col-md-6 col-sm-6  form-group has-feedback">
                                         <input type="text" name="cmnd_date" class="form-control has-feedback-left"
-                                            id="inputSuccess4" placeholder="Ngày cấp">
+                                            id="ipt_cmnd_date" placeholder="Ngày cấp">
                                         <span class="fa fa-envelope form-control-feedback right"
                                             aria-hidden="true"></span>
                                     </div>
@@ -207,7 +209,7 @@
                                         <label>Ngày thế</label>
                                         <div class="form-group">
                                             <div class='input-group date' id='myDatepicker'>
-                                                <input type='text' name="ngaythe" class="form-control" />
+                                                <input type='text' id="ipt_date" name="ngaythe" class="form-control" />
                                                 <span class="input-group-addon">
                                                     <span class="fa fa-calendar"></span>
                                                 </span>
@@ -230,34 +232,38 @@
                             <div class="form-group row">
                                 <div class="form-group row" id="pawn_item_detail">
                                     <label class="col-form-label col-md-3 col-sm-3 "><label for="heard">Món *:</label>
-                                        <select id="heard" name="mondo" class="form-control" required>
-                                            <option value="">Xe máy</option>
+                                        <select id="item" name="mondo" class="form-control" required>
+                                            <option selected="selected" value="">Xe máy</option>
                                             <option value="press">Xe đạp điện</option>
                                             <option value="net">Điện thoại</option>
                                             <option value="mouth">Khác</option>
                                         </select></label>
                                     <div class="col-md-9 col-sm-9">
                                         <div class="col-md-6 col-sm-6  form-group has-feedback">
-                                            <input type="text" name="money" class="form-control has-feedback-left"
-                                                id="inputSuccess4" placeholder="Nhãn hiệu">
+                                            <input type="text" name="ipt_item_name"
+                                                class="form-control has-feedback-left" id="ipt_item_name"
+                                                placeholder="Nhãn hiệu">
                                             <span class="fa fa-envelope form-control-feedback left"
                                                 aria-hidden="true"></span>
                                         </div>
                                         <div class="col-md-6 col-sm-6  form-group has-feedback">
-                                            <input type="text" name="money" class="form-control has-feedback-left"
-                                                id="inputSuccess4" placeholder="Màu">
+                                            <input type="text" name="ipt_item_color"
+                                                class="form-control has-feedback-left" id="ipt_item_color"
+                                                placeholder="Màu">
                                             <span class="fa fa-envelope form-control-feedback left"
                                                 aria-hidden="true"></span>
                                         </div>
                                         <div class="col-md-6 col-sm-6  form-group has-feedback">
-                                            <input type="text" name="money" class="form-control has-feedback-left"
-                                                id="inputSuccess4" placeholder="Cavet">
+                                            <input type="text" name="ipt_item_cavet"
+                                                class="form-control has-feedback-left" id="inputSuccess4"
+                                                placeholder="Cavet">
                                             <span class="fa fa-envelope form-control-feedback left"
                                                 aria-hidden="true"></span>
                                         </div>
                                         <div class="col-md-6 col-sm-6  form-group has-feedback">
-                                            <input type="text" name="money" class="form-control has-feedback-left"
-                                                id="inputSuccess4" placeholder="Tình trạng">
+                                            <input type="text" name="ipt_item_tinhtrang"
+                                                class="form-control has-feedback-left" id="ipt_item_tinhtrang"
+                                                placeholder="Tình trạng">
                                             <span class="fa fa-envelope form-control-feedback left"
                                                 aria-hidden="true"></span>
                                         </div>
@@ -276,6 +282,9 @@
                                     <div> <input type="button" class="btn btn-primary" value="Chụp"
                                             style="position: absolute;width:20%;margin-left: -97%;margin-top:40%"
                                             onClick="take_snapshot()"></div>
+                                    <div> <input type="button" class="btn btn-primary" value="xác nhận ảnh"
+                                            style="position: absolute;width:25%;margin-left: -99%;margin-top:50%"
+                                            onClick="uploadPic()"></div>
                                 </div>
 
 
@@ -284,8 +293,8 @@
                             <div class="form-group row">
                                 <div class="col-md-12 col-sm-12  form-group has-feedback">
                                     <label for="heard">Lãi xuất (%) :</label>
-                                    <select id="heard" name="laixuat" class="form-control" required>
-                                        <option value="">3</option>
+                                    <select id="ipt_laixuat" name="ipt_laixuat" class="form-control" required>
+                                        <option selected value="">3</option>
                                         <option value="">3.5</option>
                                         <option value="press">4</option>
                                         <option value="press">4.5</option>
@@ -299,16 +308,29 @@
                             <div class="form-group">
                                 <label class="control-label col-md-3 col-sm-3 ">Ghi Chú</label>
                                 <div class="col-md-9 col-sm-9 ">
-                                    <textarea name="ghichu" class="resizable_textarea form-control"
+                                    <textarea id="ipt_ghichu" name="ghichu" class="resizable_textarea form-control"
                                         placeholder=""></textarea>
                                 </div>
                             </div>
 
-                            </form>
+
+
+
                         </div>
+
+                        <div class="form-group">
+                            <div class="col-md-12 col-sm-12 col-xs-12">
+                                <button class="btn btn-primary" type="button" id="" onclick="xemtruoc()">Xem
+                                    trước</button>
+                                <button class="btn btn-primary" type="reset">Reset</button>
+                                <button type="submit" class="btn btn-success">Đồng ý</button>
+                            </div>
+                        </div>
+
+                        </form>
                     </div>
                     <div class="col-md-6">
-                        <iframe class="zoom" src="bill"></iframe>
+                        <iframe class="zoom" id="iframe_xemtruoc" src=""></iframe>
                     </div>
 
                 </div>
@@ -371,11 +393,49 @@
 
         Webcam.attach('#my_camera');
         function take_snapshot() {
-            // take snapshot and get image data
             Webcam.snap(function (data_uri) {
-                // display results in page
                 document.getElementById('results').innerHTML =
-                    '<img src="' + data_uri + '"/>';
+                    '<img id="img_base64" src="' + data_uri + '"/>';
+            });
+        }
+        function xemtruoc() {
+
+            name = document.querySelector("#ipt_name").value;
+            phone = document.querySelector("#ipt_phone").value;
+            money = document.querySelector("#ipt_money").value;
+            sale = document.querySelector("#ipt_sale").value;
+            cmnd = document.querySelector("#ipt_cmnd").value;
+            cmnd_date = document.querySelector("#ipt_cmnd_date").value;
+            date_p = document.querySelector("#ipt_date").value;
+            item_name = document.querySelector("#ipt_item_name").value;
+            item_color = document.querySelector("#ipt_item_color").value;
+            item_tinhtrang = document.querySelector("#ipt_item_tinhtrang").value;
+            laixuat = document.querySelector("#ipt_laixuat").value;
+            ghichu = document.querySelector("#ipt_ghichu").value;
+            cavet = "12312";
+            str = "bill?name=" + name + "&";
+            str += "phone=" + phone + "&";
+            str += "money=" + money + "&";
+            str += "sale=" + sale + "&";
+            str += "cmnd=" + cmnd + "&";
+            str += "cmnd_date=" + cmnd_date + "&";
+            str += "date_p=" + date_p + "&";
+            str += "item_name=" + item_name + "&";
+            str += "item_color=" + item_color + "&";
+            str += "item_tinhtrang=" + item_tinhtrang + "&";
+            str += "laixuat=" + laixuat + "&";
+            str += "ghichu=" + ghichu + "&";
+            str += "cavet=" + cavet + "&";
+
+
+            document.querySelector("#iframe_xemtruoc").src = str;
+
+        }
+        function uploadPic() {
+            base64image=document.querySelector("#img_base64").src;
+            
+            Webcam.upload(base64image, 'upload_picture', function (code, text) {
+                alert(text)
             });
         }
     </script>
