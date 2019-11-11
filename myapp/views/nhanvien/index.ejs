@@ -9,26 +9,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <!-- Bootstrap -->
-    <link href="../vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
-    <link href="../vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <link href="vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
     <!-- NProgress -->
-    <link href="../vendors/nprogress/nprogress.css" rel="stylesheet">
+    <link href="vendors/nprogress/nprogress.css" rel="stylesheet">
     <!-- bootstrap-daterangepicker -->
-    <link href="../vendors/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
+    <link href="vendors/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
     <!-- bootstrap-datetimepicker -->
-    <link href="../vendors/bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.css" rel="stylesheet">
+    <link href="vendors/bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.css" rel="stylesheet">
     <!-- Ion.RangeSlider -->
-    <link href="../vendors/normalize-css/normalize.css" rel="stylesheet">
-    <link href="../vendors/ion.rangeSlider/css/ion.rangeSlider.css" rel="stylesheet">
-    <link href="../vendors/ion.rangeSlider/css/ion.rangeSlider.skinFlat.css" rel="stylesheet">
+    <link href="vendors/normalize-css/normalize.css" rel="stylesheet">
+    <link href="vendors/ion.rangeSlider/css/ion.rangeSlider.css" rel="stylesheet">
+    <link href="vendors/ion.rangeSlider/css/ion.rangeSlider.skinFlat.css" rel="stylesheet">
     <!-- Bootstrap Colorpicker -->
-    <link href="../vendors/mjolnic-bootstrap-colorpicker/dist/css/bootstrap-colorpicker.min.css" rel="stylesheet">
+    <link href="vendors/mjolnic-bootstrap-colorpicker/dist/css/bootstrap-colorpicker.min.css" rel="stylesheet">
 
-    <link href="../vendors/cropper/dist/cropper.min.css" rel="stylesheet">
+    <link href="vendors/cropper/dist/cropper.min.css" rel="stylesheet">
 
     <!-- Custom Theme Style -->
-    <link href="../build/css/custom.min.css" rel="stylesheet">
+    <link href="build/css/custom.min.css" rel="stylesheet">
     <style>
         .editor_pic {
             cursor: pointer;
@@ -151,7 +151,8 @@
                     <div class="col-md-6 ">
                         <div class="x_panel">
                             <div class="x_title">
-                                <h2>Thông tin đồ thế<small> Hợp đồng số <span id="id_hopdong"> <%= lastid %></span></small></h2>
+                                <h2>Thông tin đồ thế<small> Hợp đồng số <span id="id_hopdong">
+                                            <%= lastid %></span></small></h2>
                                 <ul class="nav navbar-right panel_toolbox">
                                     <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
                                     </li>
@@ -163,7 +164,8 @@
                             </div>
                             <div class="x_content">
                                 <br />
-                                <form class="form-label-left input_mask" autocomplete="off">
+                                <form method="GET" action="pawn_submit" class="form-label-left input_mask"
+                                    autocomplete="off">
 
                                     <div class="col-md-6 col-sm-6  form-group has-feedback">
 
@@ -173,8 +175,9 @@
                                     </div>
 
                                     <div class="col-md-6 col-sm-6  form-group has-feedback">
-                                        <input required id="ipt_phone" type="text" name="phone" class="form-control"
-                                            placeholder="Số Điện thoại" title="Nhập đúng số điện thoại">
+                                        <input required id="ipt_phone" pattern="0[0-9]{9,11}" type="text" name="phone"
+                                            class="form-control" placeholder="Số Điện thoại"
+                                            title="Nhập đúng số điện thoại">
                                         <span class="fa fa-phone form-control-feedback right" aria-hidden="true"></span>
                                     </div>
 
@@ -190,8 +193,9 @@
                                         <span class="fa fa-user form-control-feedback right" aria-hidden="true"></span>
                                     </div>
                                     <div class="col-md-6 col-sm-6  form-group has-feedback">
-                                        <input autocomplete="false" type="text" name="cmnd" class="form-control has-feedback-left"
-                                            id="ipt_cmnd" placeholder="CMND">
+                                        <input autocomplete="false" type="text" name="cmnd"
+                                            class="form-control has-feedback-left" id="ipt_cmnd" placeholder="CMND"
+                                            pattern="[0-9]{9}" title="Nhập đúng số cmnd">
                                         <span class="fa fa-credit-card form-control-feedback left"
                                             aria-hidden="true"></span>
                                     </div>
@@ -208,7 +212,7 @@
                                         <label>Ngày thế</label>
                                         <div class="form-group">
                                             <div class='input-group date' id='myDatepicker'>
-                                                <input required type='text' id="ipt_date" name="ngaythe"
+                                                <input type='text' onchange="changeDate()" id="ipt_date" name="ngaythe"
                                                     class="form-control" />
                                                 <span class="input-group-addon">
                                                     <span class="fa fa-calendar"></span>
@@ -220,7 +224,6 @@
                                         <label>Ngày tới hạn</label>
                                         <input type="text" id="ngaytoihan" name="ngaytoihan"
                                             class="form-control has-feedback-left" placeholder="" readonly>
-
                                     </div>
 
 
@@ -233,16 +236,15 @@
                                 <div class="form-group row" id="pawn_item_detail">
                                     <label class="col-form-label col-md-3 col-sm-3 "><label for="heard">Món *:</label>
                                         <select id="item" name="mondo" class="form-control" required>
-                                            
                                             <option selected value="xemay">Xe máy</option>
-                                            <option value="xe đạp điện">Xe đạp điện</option>
-                                            <option value="điện thoại">Điện thoại</option>
-                                            <option value="khác">Khác</option>
+                                            <option value="xedien">Xe điện</option>
+                                            <option value="dienthoai">Điện thoại</option>
+                                            <option value="khac">Khác</option>
                                         </select></label>
                                     <div class="col-md-9 col-sm-9">
                                         <div class="col-md-6 col-sm-6  form-group has-feedback">
-                                            <input title="Điền đúng tên người" list="xe_datalist"
-                                                type="text" name="ipt_item_name" class="form-control has-feedback-left"
+                                            <input title="Điền đúng tên người" list="xe_datalist" type="text"
+                                                name="ipt_item_name" class="form-control has-feedback-left"
                                                 id="ipt_item_name" placeholder="Nhãn hiệu">
                                             <span class="fa fa-envelope form-control-feedback left"
                                                 aria-hidden="true"></span>
@@ -277,7 +279,7 @@
                                         </div>
                                         <div class="col-md-6 col-sm-6  form-group has-feedback">
                                             <input required type="text" name="ipt_item_cavet"
-                                                class="form-control has-feedback-left" id="inputSuccess4"
+                                                class="form-control has-feedback-left" id="ipt_item_cavet"
                                                 placeholder="Biển số">
                                             <span class="fa fa-envelope form-control-feedback left"
                                                 aria-hidden="true"></span>
@@ -304,7 +306,8 @@
                                     <div> <input type="button" class="btn btn-primary" value="Chụp"
                                             style="position: absolute;width:20%;margin-left: -97%;margin-top:40%"
                                             onClick="take_snapshot()"></div>
-                                    <div> <input type="button" class="btn btn-primary" value="xác nhận ảnh"
+                                    <div> <input disabled type="button" id="btn_xacnhananh" class="btn btn-primary"
+                                            value="xác nhận ảnh"
                                             style="position: absolute;width:25%;margin-left: -99%;margin-top:50%"
                                             onClick="uploadPic()"></div>
                                 </div>
@@ -326,7 +329,7 @@
                                     </select></label>
                                 </div>
                             </div>
-
+                            <input type="hidden" id="ipt_url" name='url' value="" />
                             <div class="form-group">
                                 <label class="control-label col-md-3 col-sm-3 ">Ghi Chú</label>
                                 <div class="col-md-9 col-sm-9 ">
@@ -343,10 +346,10 @@
                         <div class="form-group">
                             <div class="col-md-12 col-sm-12 col-xs-12">
                                 <button class="btn btn-primary" disabled type="button" id="btn_xemtruoc"
-                                  onclick="xemtruoc();">Xem
+                                    onclick="xemtruoc();">Xem
                                     trước</button>
                                 <button class="btn btn-primary" type="reset">Reset</button>
-                                <button type="submit" class="btn btn-success">Đồng ý</button>
+                                <button id="btn_submit" type="submit" class="btn btn-success" disabled>Đồng ý</button>
                             </div>
                         </div>
 
@@ -407,6 +410,7 @@
     <script src="js/webcam.min.js"></script>
 
     <script>
+
         $(document).ready(function () {
             $('#myDatepicker').datetimepicker({
                 format: 'DD/MM/YYYY',
@@ -414,17 +418,44 @@
             }).on('onload', function () {
                 //get date
                 _date = $("#ipt_date").val().split('/');
-
                 var date = new Date(_date[2], _date[1], _date[0]);
                 date.setMonth(date.getMonth() + 3)
                 date_end_count = getDayFormat(date);
                 $('#ngaytoihan').val(date_end_count)
-            });
-
+            }).on('dp.change', function (e) {
+                _date = $("#ipt_date").val().split('/');
+                var date = new Date(_date[2], _date[1], _date[0]);
+                date.setMonth(date.getMonth() + 3)
+                date_end_count = getDayFormat(date);
+                $('#ngaytoihan').val(date_end_count)
+            })
             $("#myDatepicker").trigger('onload');
 
+            $("#item").change(function () {
+                _val = this.value;
+                console.log(_val)
+                switch (_val) {
+                    case "xemay": {
+                        $("#ipt_item_cavet").prop('disabled', false)
+                    } break;
+                    case "xedien": {
+                        $("#ipt_item_cavet").prop('disabled', true)
+                    } break;
+                    case "dienthoai": {
+                        $("#ipt_item_cavet").prop('disabled', true)
+                    } break;
+                    case "khac": {
+                        $("#ipt_item_cavet").prop('disabled', true)
+                    } break;
+
+                    default: {
+                        $("#ipt_item_cavet").prop('disabled', true)
+                    } break;
+                }
+            });
 
         });
+
 
     </script>
     <script language="JavaScript">
@@ -456,10 +487,18 @@
                 document.getElementById('results').innerHTML =
                     '<img id="img_base64" src="' + data_uri + '"/>';
             });
+            $("#btn_xacnhananh").prop('disabled', false);
         }
         url = "";
         function xemtruoc() {
+            //check validate
+            if (document.querySelector("#ipt_name").checkValidity() && document.querySelector("#ipt_phone").checkValidity() && document.querySelector("#ipt_money").checkValidity()) {
+                $("#btn_submit").prop('disabled', false);
 
+            } else {
+                alert('Vui lòng điển đủ các thông tin')
+                return;
+            }
             name = document.querySelector("#ipt_name").value;
             phone = document.querySelector("#ipt_phone").value;
             money = document.querySelector("#ipt_money").value;
@@ -486,33 +525,34 @@
             str += "laixuat=" + laixuat + "&";
             str += "ghichu=" + ghichu + "&";
             str += "cavet=" + cavet + "&";
-            str += "url=" + url;
-
-
+            str += "url=" + url.replace(/%20/g, "");
             document.querySelector("#iframe_xemtruoc").src = str;
 
         }
 
         function uploadPic() {
             base64image = document.querySelector("#img_base64").src;
-            id=document.querySelector("#id_hopdong").innerHTML;
+            id = document.querySelector("#id_hopdong").innerHTML;
             date = document.querySelector("#ipt_date").value;
-            
-            date = date.replace(/\//g,"");
 
-            
-            nameOfpicture = id+"-"+date;
+            date = date.replace(/\//g, "");
+
+
+            nameOfpicture = id + "-" + date;
+            nameOfpicture = decodeURI(nameOfpicture);
+            nameOfpicture = nameOfpicture.trim();
+
             $.ajax({
                 url: '/upload_picture',
                 type: 'POST',
                 data: {
                     img: base64image,
-                    //id-date-name
-                    name:nameOfpicture
+                    name: nameOfpicture
                 },
                 success: function (data) {
                     url = data;
                     document.getElementById("btn_xemtruoc").disabled = false;
+                    $("ipt_url").val(url);
                 },
             });
 
@@ -580,14 +620,14 @@
                 right_side = right_side.substring(0, 2);
 
                 // join number by .
-                input_val = left_side ;
+                input_val = left_side;
 
             } else {
                 // no decimal entered
                 // add commas to number
                 // remove all non-digits
                 input_val = formatNumber(input_val);
-                input_val = input_val ;
+                input_val = input_val;
 
                 // final formatting
                 if (blur === "blur") {

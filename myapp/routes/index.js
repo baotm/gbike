@@ -30,7 +30,7 @@ router.get('/', function (req, res, next) {
         res.render('admin_1', { title: name, acc_name: info.name, acc_avatar: info.avatar })
       } break;
       case 'sale': {
-        res.render('nhanvien/index', { lastid: (parseInt(lastid)+1), title: name, acc_name: info.name, acc_avatar: info.avatar })
+        res.render('nhanvien/index', { lastid: (parseInt(lastid) + 1), title: name, acc_name: info.name, acc_avatar: info.avatar })
       } break;
       case 'tech': {
         res.render('tech', { title: name })
@@ -48,8 +48,8 @@ router.get('/logout', function (req, res) {
 router.post('/upload_picture', function (req, res) {
   img = req.body.img;
   url = "./public/image_pawn/";
-  name = url + req.body.name + ".png";
-
+  name = url + decodeURI(req.body.name) + ".png";
+  console.log(name)
   var base64Data = img.replace(/^data:image\/jpeg;base64,/, "");
 
   require("fs").writeFile(name, base64Data, 'base64', function (err) {
@@ -59,6 +59,35 @@ router.post('/upload_picture', function (req, res) {
 });
 router.get('/upload_picture', function (req, res) {
   res.send(req.query.name)
+});
+router.get('/pawn_submit', function (req, res) {
+
+  //
+  //ipt_item_color=Xanh+lá&ipt_item_cavet=85h121212&ipt_item_tinhtrang=70&ipt_laixuat=3&ghichu=
+  //do update
+  p = req.query;
+  info = {
+    name: decodeURI(p.name),
+    phone: decodeURI(p.phone),
+    money: decodeURI(req.query.money).replace(/,/g,''),
+    sale: decodeURI(p.sale),
+    cmnd: decodeURI(p.cmnd),
+    cmnd_date: decodeURI(p.cmnd_date),
+    ngaythe: decodeURI(p.ngaythe),
+    ngaytoihan: decodeURI(p.ngaytoihan),
+    mondo: {
+      name: decodeURI(p.ipt_item_name),
+      color: decodeURI(p.ipt_item_color),
+      bienso: decodeURI(p.ipt_item_cavet),
+      tinhtrang: decodeURI(p.ipt_item_tinhtrang)
+    },
+    laixuat: decodeURI(p.ipt_laixuat),
+    ghichu: decodeURI(p.ghichu)
+  }
+  res.send(info)
+  //res.redirect('nhanvien/index')
+
+
 });
 router.get('/bill', function (req, res) {
   name = req.query.name;
