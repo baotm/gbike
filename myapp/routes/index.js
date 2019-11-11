@@ -19,13 +19,18 @@ router.get('/', function (req, res, next) {
     role = req.session.role;
     name = req.session.name;
     info = JSON.parse(req.session.acc)
+    query = "SELECT id FROM docam ORDER BY id DESC LIMIT 1;"
+    var connection = getConnect();
+    re = connection.query(query);
+    lastid = re[0].id;
+    connection.dispose();
 
     switch (role) {
       case 'admin': {
         res.render('admin_1', { title: name, acc_name: info.name, acc_avatar: info.avatar })
       } break;
       case 'sale': {
-        res.render('nhanvien/index', { title: name, acc_name: info.name, acc_avatar: info.avatar })
+        res.render('nhanvien/index', { lastid: (parseInt(lastid)+1), title: name, acc_name: info.name, acc_avatar: info.avatar })
       } break;
       case 'tech': {
         res.render('tech', { title: name })
@@ -39,8 +44,21 @@ router.get('/logout', function (req, res) {
   req.session.destroy();
   res.redirect('/login?action=first');
 });
-router.get('upload_picture', function (req, res) {
-  res.send('abc')
+
+router.post('/upload_picture', function (req, res) {
+  img = req.body.img;
+  url = "./public/image_pawn/";
+  name = url + req.body.name + ".png";
+
+  var base64Data = img.replace(/^data:image\/jpeg;base64,/, "");
+
+  require("fs").writeFile(name, base64Data, 'base64', function (err) {
+  });
+
+  res.redirect('/upload_picture?name=' + req.body.name)
+});
+router.get('/upload_picture', function (req, res) {
+  res.send(req.query.name)
 });
 router.get('/bill', function (req, res) {
   name = req.query.name;
@@ -56,6 +74,7 @@ router.get('/bill', function (req, res) {
   laixuat = req.query.laixuat;
   ghichu = req.query.ghichu;
   cavet = req.query.cavet
+  url = "image_pawn/" + req.query.url + ".png"
 
   res.render('bill', {
     id: 1,
@@ -71,7 +90,8 @@ router.get('/bill', function (req, res) {
     item_tinhtrang: item_tinhtrang,
     laixuat: laixuat,
     ghichu: ghichu,
-    cavet: cavet
+    cavet: cavet,
+    url: url
   });
 })
 router.post('/checklogin', function (req, res) {
@@ -117,9 +137,6 @@ router.get('/ajax_pawn_item_get_all', function (req, res) {
 })
 
 
-router.get('/abc', function (req, res) {
-  //res.render('index')
-})
 
 router.get('/login', function (req, res) {
   act = req.query.action;
