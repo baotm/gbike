@@ -62,9 +62,6 @@ router.get('/upload_picture', function (req, res) {
 });
 router.get('/pawn_submit', function (req, res) {
 
-  //
-  //ipt_item_color=Xanh+lá&ipt_item_cavet=85h121212&ipt_item_tinhtrang=70&ipt_laixuat=3&ghichu=
-  //do update
   p = req.query;
   info = {
     name: decodeURI(p.name),
@@ -78,11 +75,11 @@ router.get('/pawn_submit', function (req, res) {
     mondo: {
       name: decodeURI(p.ipt_item_name),
       color: decodeURI(p.ipt_item_color),
-      bienso: decodeURI(p.ipt_item_cavet),
-      tinhtrang: decodeURI(p.ipt_item_tinhtrang)
+      bienso: decodeURI(p.ipt_item_cavet)
     },
     laixuat: decodeURI(p.ipt_laixuat),
-    ghichu: decodeURI(p.ghichu)
+    ghichu: decodeURI(p.ghichu),
+    urlpic:decodeURI(p.ipt_url),
   }
   res.send(info)
   //res.redirect('nhanvien/index')
@@ -102,7 +99,8 @@ router.get('/bill', function (req, res) {
   item_tinhtrang = req.query.tinhtrang;
   laixuat = req.query.laixuat;
   ghichu = req.query.ghichu;
-  cavet = req.query.cavet
+  cavet = req.query.cavet;
+  item = req.query.item;
   url = "image_pawn/" + req.query.url + ".png"
 
   res.render('bill', {
@@ -120,7 +118,8 @@ router.get('/bill', function (req, res) {
     laixuat: laixuat,
     ghichu: ghichu,
     cavet: cavet,
-    url: url
+    url: url,
+    item:item
   });
 })
 router.post('/checklogin', function (req, res) {

@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -152,7 +151,7 @@
                                     </td>
                                     <td class="dot_border" colspan="3">:<span class="pawn_name"></span> </td>
                                 </tr>
-                                <tr>
+                                <tr id="cmnd_table">
                                     <td style="width: 30%;">
                                         CMND Số :
                                     <td class="dot_border">:<span id="pawn_cmnd"></span></td>
@@ -365,6 +364,7 @@
         nhanvien: "<%= sale %>",
         kho: "Kho 1",
         tongtaisan: "1 xe exciter + 1 cavet + 1cmnd + 1 điện thoại",
+        item: "<%= item %>"
 
     }
     function init() {
@@ -385,9 +385,14 @@
         date_end_count = getDayFormat(date)
         document.querySelector("#date_end_count").innerHTML = date_end_count;
         //init pawn info
-        document.querySelector("#pawn_cmnd").innerHTML = detailInfo.cmnd;
+        if (detailInfo.cmnd == "") {
+            document.querySelector("#cmnd_table").remove();
+        } else {
+            document.querySelector("#pawn_cmnd").innerHTML = detailInfo.cmnd;
+            document.querySelector("#pawn_cmnd_date").innerHTML = detailInfo.cmndDate;
+        }
+
         document.querySelector("#page_date").innerHTML = detailInfo.date;
-        document.querySelector("#pawn_cmnd_date").innerHTML = detailInfo.cmndDate;
         document.querySelector("#pawn_name_signal").innerHTML = detailInfo.name;
         document.querySelector('.pawn_laisuat').innerHTML = detailInfo.laixuat;
 
@@ -412,7 +417,7 @@
     function makeQRCode(v) {
         var qr = new QRious({
             value: v,
-            size:120
+            size: 120
         });
         str = qr.toDataURL();
         console.log(str)
@@ -434,12 +439,30 @@
     }
     function getPawnDetail(detail) {
         str = "";
-        for (i in detail) {
-            str += detail[i].name + "<br/>";
-            str += "Cavet :" + detail[i].cavet + "<br/>";
-            str += "Màu :" + detail[i].color + "<br/>";
-            str += "Tình trạng :" + detail[i].status + "<br/>";
+
+        switch (detailInfo.item) {
+            case "xemay": {
+                for (i in detail) {
+                    str += detail[i].name + "<br/>";
+                    str += "Biển số :" + detail[i].cavet + "<br/>";
+                    str += "Màu :" + detail[i].color + "<br/>";
+                }
+            } break;
+            case "xedien": {
+
+            }
+            case "dienthoai": {
+            
+            }
+            case "khac": {
+               
+                for (i in detail) {
+                    str += detail[i].name + "<br/>";
+                    str += "Màu :" + detail[i].color + "<br/>";
+                }
+            } break;
         }
+
         return str;
     }
     function getPawnDetail_img(detail) {

@@ -200,7 +200,7 @@
                                             aria-hidden="true"></span>
                                     </div>
                                     <div class="col-md-6 col-sm-6  form-group has-feedback">
-                                        <input required type="text" name="cmnd_date"
+                                        <input  type="text" name="cmnd_date"
                                             class="form-control has-feedback-left" id="ipt_cmnd_date"
                                             placeholder="Ngày cấp">
                                         <span class="fa fa-calendar form-control-feedback right"
@@ -243,13 +243,16 @@
                                         </select></label>
                                     <div class="col-md-9 col-sm-9">
                                         <div class="col-md-6 col-sm-6  form-group has-feedback">
-                                            <input title="Điền đúng tên người" list="xe_datalist" type="text"
-                                                name="ipt_item_name" class="form-control has-feedback-left"
-                                                id="ipt_item_name" placeholder="Nhãn hiệu">
+                                            <div id="select_item">
+                                                <input title="Điền đúng tên xe" list="xe_datalist" type="text"
+                                                    name="ipt_item_name" class="form-control has-feedback-left"
+                                                    id="ipt_item_name" placeholder="Nhãn hiệu">
+                                            </div>
+
                                             <span class="fa fa-envelope form-control-feedback left"
                                                 aria-hidden="true"></span>
                                             <datalist id="xe_datalist">
-                                                <option selected value="Exciter">
+                                                <option value="Exciter">
                                                 <option value="Cub">
                                                 <option value="Wave">
                                                 <option value="Honda Vision">
@@ -257,13 +260,26 @@
                                                 <option value="Xe ga 30tr">
                                                 <option value="Xe cao cấp 50tr">
                                             </datalist>
+                                            <datalist id="dienthoai_datalist">
+                                                <option value="Apple">
+                                                <option value="Samsung">
+                                                <option value="dưới 3tr">
+                                                <option value="dưới 8tr">
+                                                <option value="trên 10tr">
+                                            </datalist>
+                                            <datalist id="xedien_datalist">
+                                                <option value="dưới 8tr">
+                                                <option value="trên 8tr">
+                                                <option value="cao cấp">
+                                            </datalist>
+
                                         </div>
                                         <div class="col-md-6 col-sm-6  form-group has-feedback">
                                             <input list="color_datalist" type="text" name="ipt_item_color"
                                                 class="form-control has-feedback-left" id="ipt_item_color"
                                                 placeholder="Màu">
                                             <datalist id="color_datalist">
-                                                <option selected value="Xanh lá">
+                                                <option value="Xanh lá">
                                                 <option value="Đỏ">
                                                 <option value="Vàng">
                                                 <option value="Xanh biển">
@@ -285,9 +301,7 @@
                                                 aria-hidden="true"></span>
                                         </div>
                                         <div class="col-md-6 col-sm-6  form-group has-feedback">
-                                            <input required type="text" name="ipt_item_tinhtrang"
-                                                class="form-control has-feedback-left" id="ipt_item_tinhtrang"
-                                                placeholder="Tình trạng">
+                                            <input name="ipt_url" id="ipt_url" class="form-control has-feedback-left Disabled">
                                             <span class="fa fa-wrench form-control-feedback left"
                                                 aria-hidden="true"></span>
                                         </div>
@@ -295,7 +309,8 @@
 
                                         <div class="col-md-6 col-sm-6">
                                             <label>Ảnh</label>
-                                            <div id="results" style="width: 320px;height: 240px;color:bisque">
+                                            <div id="results"
+                                                style="width: 320px;height: 240px;border: 1px solid black;">
 
                                             </div>
                                             <br />
@@ -329,7 +344,7 @@
                                     </select></label>
                                 </div>
                             </div>
-                            <input type="hidden" id="ipt_url" name='url' value="" />
+                            
                             <div class="form-group">
                                 <label class="control-label col-md-3 col-sm-3 ">Ghi Chú</label>
                                 <div class="col-md-9 col-sm-9 ">
@@ -437,17 +452,32 @@
                 switch (_val) {
                     case "xemay": {
                         $("#ipt_item_cavet").prop('disabled', false)
+                        var myvar = '<input title="Điền đúng tên" list="xe_datalist" type="text"' +
+                            '                        name="ipt_item_name" class="form-control has-feedback-left"' +
+                            '                        id="ipt_item_name" placeholder="Nhãn hiệu">';
+                        document.querySelector("#select_item").innerHTML = myvar;
                     } break;
                     case "xedien": {
                         $("#ipt_item_cavet").prop('disabled', true)
+                        var myvar = '<input title="Điền đúng tên" list="xedien_datalist" type="text"' +
+                            '                        name="ipt_item_name" class="form-control has-feedback-left"' +
+                            '                        id="ipt_item_name" placeholder="Nhãn hiệu">';
+                        document.querySelector("#select_item").innerHTML = myvar;
                     } break;
                     case "dienthoai": {
                         $("#ipt_item_cavet").prop('disabled', true)
+                        var myvar = '<input title="Điền đúng tên" list="dienthoai_datalist" type="text"' +
+                            '                        name="ipt_item_name" class="form-control has-feedback-left"' +
+                            '                        id="ipt_item_name" placeholder="Nhãn hiệu">';
+                        document.querySelector("#select_item").innerHTML = myvar;
                     } break;
                     case "khac": {
                         $("#ipt_item_cavet").prop('disabled', true)
+                        var myvar = '<input title="Điền đúng tên" type="text"' +
+                            '                        name="ipt_item_name" class="form-control has-feedback-left"' +
+                            '                        id="ipt_item_name" placeholder="Nhãn hiệu">';
+                        document.querySelector("#select_item").innerHTML = myvar;
                     } break;
-
                     default: {
                         $("#ipt_item_cavet").prop('disabled', true)
                     } break;
@@ -508,10 +538,11 @@
             date_p = document.querySelector("#ipt_date").value;
             item_name = document.querySelector("#ipt_item_name").value;
             item_color = document.querySelector("#ipt_item_color").value;
-            item_tinhtrang = document.querySelector("#ipt_item_tinhtrang").value;
             laixuat = $("#ipt_laixuat :selected").text();
             ghichu = document.querySelector("#ipt_ghichu").value;
-            cavet = "12312";
+            item = document.querySelector("#item").value;
+            cavet = document.querySelector("#ipt_item_cavet").value;
+
             str = "bill?name=" + name + "&";
             str += "phone=" + phone + "&";
             str += "money=" + money + "&";
@@ -521,11 +552,11 @@
             str += "date_p=" + date_p + "&";
             str += "item_name=" + item_name + "&";
             str += "item_color=" + item_color + "&";
-            str += "item_tinhtrang=" + item_tinhtrang + "&";
             str += "laixuat=" + laixuat + "&";
             str += "ghichu=" + ghichu + "&";
             str += "cavet=" + cavet + "&";
-            str += "url=" + url.replace(/%20/g, "");
+            str += "url=" + url.replace(/%20/g, "") + "&";
+            str += "item=" + item;
             document.querySelector("#iframe_xemtruoc").src = str;
 
         }
@@ -552,7 +583,7 @@
                 success: function (data) {
                     url = data;
                     document.getElementById("btn_xemtruoc").disabled = false;
-                    $("ipt_url").val(url);
+                    $("#ipt_url").val(url);
                 },
             });
 
@@ -590,7 +621,7 @@
             // original length
             var original_len = input_val.length;
 
-            // initial caret position 
+            // initial caret position
             var caret_pos = input.prop("selectionStart");
 
             // check for decimal
