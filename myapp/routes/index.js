@@ -235,6 +235,7 @@ router.get('/ajax_pawn_item_get_all', function (req, res) {
   connection.dispose();
   _re += JSON.stringify(re);
   _re += '}';
+_re.replace(/\\/g,'');
   res.send(_re);
 })
 
