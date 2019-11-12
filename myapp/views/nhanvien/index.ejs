@@ -246,7 +246,7 @@
                                             <div id="select_item">
                                                 <input title="Điền đúng tên xe" list="xe_datalist" type="text"
                                                     name="ipt_item_name" class="form-control has-feedback-left"
-                                                    id="ipt_item_name" placeholder="Nhãn hiệu">
+                                                    id="ipt_item_name" onchange="nameChange(this)" placeholder="Nhãn hiệu">
                                             </div>
 
                                             <span class="fa fa-envelope form-control-feedback left"
@@ -315,6 +315,7 @@
                                             </div>
                                             <br />
                                             <div id="my_camera"></div>
+                                            <input type="hidden" name="ipt_item_name_1" id="ipt_item_name_1"/>
                                         </div>
 
                                     </div>
@@ -454,28 +455,28 @@
                         $("#ipt_item_cavet").prop('disabled', false)
                         var myvar = '<input title="Điền đúng tên" list="xe_datalist" type="text"' +
                             '                        name="ipt_item_name" class="form-control has-feedback-left"' +
-                            '                        id="ipt_item_name" placeholder="Nhãn hiệu">';
+                            '                        id="ipt_item_name" placeholder="Nhãn hiệu" onchange="nameChange()">';
                         document.querySelector("#select_item").innerHTML = myvar;
                     } break;
                     case "xedien": {
                         $("#ipt_item_cavet").prop('disabled', true)
                         var myvar = '<input title="Điền đúng tên" list="xedien_datalist" type="text"' +
                             '                        name="ipt_item_name" class="form-control has-feedback-left"' +
-                            '                        id="ipt_item_name" placeholder="Nhãn hiệu">';
+                            '                        id="ipt_item_name" placeholder="Nhãn hiệu" onchange="nameChange()">';
                         document.querySelector("#select_item").innerHTML = myvar;
                     } break;
                     case "dienthoai": {
                         $("#ipt_item_cavet").prop('disabled', true)
                         var myvar = '<input title="Điền đúng tên" list="dienthoai_datalist" type="text"' +
                             '                        name="ipt_item_name" class="form-control has-feedback-left"' +
-                            '                        id="ipt_item_name" placeholder="Nhãn hiệu">';
+                            '                        id="ipt_item_name" placeholder="Nhãn hiệu" onchange="nameChange()">';
                         document.querySelector("#select_item").innerHTML = myvar;
                     } break;
                     case "khac": {
                         $("#ipt_item_cavet").prop('disabled', true)
                         var myvar = '<input title="Điền đúng tên" type="text"' +
                             '                        name="ipt_item_name" class="form-control has-feedback-left"' +
-                            '                        id="ipt_item_name" placeholder="Nhãn hiệu">';
+                            '                        id="ipt_item_name" placeholder="Nhãn hiệu" onchange="nameChange()">';
                         document.querySelector("#select_item").innerHTML = myvar;
                     } break;
                     default: {
@@ -485,7 +486,10 @@
             });
 
         });
-
+        function nameChange(item){
+           _val = item.value;
+           $("#ipt_item_name_1").val(_val);
+        }
 
     </script>
     <script language="JavaScript">

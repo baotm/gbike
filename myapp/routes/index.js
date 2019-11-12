@@ -63,27 +63,101 @@ router.get('/upload_picture', function (req, res) {
 router.get('/pawn_submit', function (req, res) {
 
   p = req.query;
-  info = {
-    name: decodeURI(p.name),
-    phone: decodeURI(p.phone),
-    money: decodeURI(req.query.money).replace(/,/g,''),
-    sale: decodeURI(p.sale),
-    cmnd: decodeURI(p.cmnd),
-    cmnd_date: decodeURI(p.cmnd_date),
-    ngaythe: decodeURI(p.ngaythe),
-    ngaytoihan: decodeURI(p.ngaytoihan),
-    mondo: {
-      name: decodeURI(p.ipt_item_name),
-      color: decodeURI(p.ipt_item_color),
-      bienso: decodeURI(p.ipt_item_cavet)
-    },
-    laixuat: decodeURI(p.ipt_laixuat),
-    ghichu: decodeURI(p.ghichu),
-    urlpic:decodeURI(p.ipt_url),
+  mondo = p.mondo;
+  info = {};
+  switch (mondo) {
+    case "xemay": {
+      info = {
+        name: decodeURI(p.name),
+        phone: decodeURI(p.phone),
+        money: decodeURI(req.query.money).replace(/,/g, ''),
+        ngaythe: decodeURI(p.ngaythe),
+        ngaytoihan: decodeURI(p.ngaytoihan),
+        mondo: {
+          loaihang: "Xe máy",
+          name: decodeURI(p.ipt_item_name_1),
+          color: decodeURI(p.ipt_item_color),
+          bienso: decodeURI(p.ipt_item_cavet),
+          sale: decodeURI(p.sale),
+          cmnd: decodeURI(p.cmnd),
+          cmnd_date: decodeURI(p.cmnd_date),
+        },
+        laixuat: decodeURI(p.ipt_laixuat),
+        ghichu: decodeURI(p.ghichu),
+        urlpic: decodeURI(p.ipt_url),
+      }
+    } break;
+    case "dienthoai": {
+      info = {
+        name: decodeURI(p.name),
+        phone: decodeURI(p.phone),
+        money: decodeURI(req.query.money).replace(/,/g, ''),
+        ngaythe: decodeURI(p.ngaythe),
+        ngaytoihan: decodeURI(p.ngaytoihan),
+        mondo: {
+          loaihang: "Điện thoại",
+          name: decodeURI(p.ipt_item_name_1),
+          color: decodeURI(p.ipt_item_color),
+          sale: decodeURI(p.sale),
+          cmnd: decodeURI(p.cmnd),
+          cmnd_date: decodeURI(p.cmnd_date),
+        },
+        laixuat: decodeURI(p.ipt_laixuat),
+        ghichu: decodeURI(p.ghichu),
+        urlpic: decodeURI(p.ipt_url),
+      }
+    } break;
+    case "xedien": {
+      info = {
+        name: decodeURI(p.name),
+        phone: decodeURI(p.phone),
+        money: decodeURI(req.query.money).replace(/,/g, ''),
+        ngaythe: decodeURI(p.ngaythe),
+        ngaytoihan: decodeURI(p.ngaytoihan),
+        mondo: {
+          loaihang: "Xe điện",
+          name: decodeURI(p.ipt_item_name_1),
+          color: decodeURI(p.ipt_item_color),
+          sale: decodeURI(p.sale),
+          cmnd: decodeURI(p.cmnd),
+          cmnd_date: decodeURI(p.cmnd_date),
+        },
+        laixuat: decodeURI(p.ipt_laixuat),
+        ghichu: decodeURI(p.ghichu),
+        urlpic: decodeURI(p.ipt_url),
+      }
+    } break;
+    default: {
+      info = {
+        name: decodeURI(p.name),
+        phone: decodeURI(p.phone),
+        money: decodeURI(req.query.money).replace(/,/g, ''),
+        ngaythe: decodeURI(p.ngaythe),
+        ngaytoihan: decodeURI(p.ngaytoihan),
+        mondo: {
+          loaihang: "Khác",
+          name: decodeURI(p.ipt_item_name_1),
+          color: decodeURI(p.ipt_item_color),
+          sale: decodeURI(p.sale),
+          cmnd: decodeURI(p.cmnd),
+          cmnd_date: decodeURI(p.cmnd_date),
+        },
+        laixuat: decodeURI(p.ipt_laixuat),
+        ghichu: decodeURI(p.ghichu),
+        urlpic: decodeURI(p.ipt_url),
+      }
+    }
   }
-  res.send(info)
-  //res.redirect('nhanvien/index')
 
+  //insert to db
+  strQuery = "INSERT INTO docam " +
+    "(`id`,`ten`, `sodienthoai`, `mondo`, `sotien`, `hinhanh`, `ngaycam`, `ngaychuoc`, `trinhtrang`, `tienno`, `tienlai`, `laixuat`, `ghichu`) VALUES" +
+    " (0,'" + info.name + "', '" + info.phone + "', '" + JSON.stringify(info.mondo) + "', " + info.money + ",'" + info.urlpic + "', '" + info.ngaythe + "', '" + info.ngaytoihan + "','Chưa chuộc', 0, 0," + info.laixuat + ", '" + info.ghichu + "')";
+  //res.redirect('nhanvien/index')
+  var connection = getConnect();
+  re = connection.query(strQuery);
+  connection.dispose();
+  res.send('200')
 
 });
 router.get('/bill', function (req, res) {
@@ -119,7 +193,7 @@ router.get('/bill', function (req, res) {
     ghichu: ghichu,
     cavet: cavet,
     url: url,
-    item:item
+    item: item
   });
 })
 router.post('/checklogin', function (req, res) {

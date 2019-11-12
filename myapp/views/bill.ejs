@@ -443,17 +443,23 @@
         switch (detailInfo.item) {
             case "xemay": {
                 for (i in detail) {
-                    str += detail[i].name + "<br/>";
+                    str += "Xe : "+detail[i].name + "<br/>";
                     str += "Biển số :" + detail[i].cavet + "<br/>";
                     str += "Màu :" + detail[i].color + "<br/>";
                 }
             } break;
             case "xedien": {
-
-            }
+                for (i in detail) {
+                    str += "Xe :"+detail[i].name + "<br/>";
+                    str += "Màu :" + detail[i].color + "<br/>";
+                }
+            } break;
             case "dienthoai": {
-            
-            }
+                for (i in detail) {
+                    str += "Điện thoại :"+detail[i].name + "<br/>";
+                    str += "Màu :" + detail[i].color + "<br/>";
+                }
+            }break;
             case "khac": {
                
                 for (i in detail) {
