@@ -22,7 +22,8 @@
       color: dodgerblue;
     }
 
-    ul span {
+    ul span,
+    .txt_decor {
       text-decoration: underline dotted grey;
       cursor: pointer;
     }
@@ -217,23 +218,29 @@
                         <div class="col-md-6">
                           <ul class="list-group">
                             <li class="list-group-item"><span>ID</span> : <span id="info_id"></span></li>
-                            <li class="list-group-item "><span>Tên</span> : <span class="edit" id="info_name"></span>
+                            <li class="list-group-item "><span>Tên</span> : <span data-name="name" class="edit"
+                                id="info_name"></span>
                             </li>
 
-                            <li class="list-group-item">Số Tiền : <span class="edit" id="info_money"></span></li>
-                            <li class="list-group-item">Số điện thoại : <span class="edit" id="info_phone"></span></li>
+                            <li class="list-group-item">Số Tiền : <span data-name="money" class="edit"
+                                id="info_money"></span></li>
+                            <li class="list-group-item">Số điện thoại : <span data-name="phone" class="edit"
+                                id="info_phone"></span></li>
 
 
                             <li class="list-group-item">Ngày thế :<span id="info_ngaythe"></span></li>
                             <li class="list-group-item">Ngày tới hạn :<span id="info_ngaytoihan"></span></li>
-                            <li class="list-group-item">Lãi xuất (%) :<span class="edit" id="info_laixuat"></span></li>
+                            <li class="list-group-item">Lãi xuất (%) :<span data-name="laixuat" class="edit"
+                                id="info_laixuat"></span></li>
                             <li class="list-group-item">Lãi ( tới hôm nay) :<span id="info_tienlai"></span></li>
                             <li class="list-group-item">Sale :<span id="info_sale"></span></li>
                             <li id="info_cmnd_li" class="list-group-item">Cmnd :<span id="info_cmnd"></span> -
                               Ngày Cấp :<span id="info_cmnd_date"></span> </li>
                             <li class="list-group-item">Tình Trạng :<span id="info_tinhtrang"></span></li>
-                            <li class="list-group-item">Tiền nợ :<span class="edit" id="info_tienno"></span></li>
-                            <li class="list-group-item">Ghi Chú :<span class="edit" id="info_ghichu"></span></li>
+                            <li class="list-group-item">Tiền nợ :<span data-name="tieno" class="edit"
+                                id="info_tienno"></span></li>
+                            <li class="list-group-item">Ghi Chú :<span data-name="ghichu" class="edit"
+                                id="info_ghichu"></span></li>
 
                           </ul>
 
@@ -241,12 +248,22 @@
                         <div class="col-md-6">
 
                           <ul class="list-group">
-                            <li class="list-group-item"><span class="edit" id="info_mondo_name"></span></li>
-                            <li class="list-group-item"><span class="edit" id="info_mondo_color"></span></li>
+                            <li class="list-group-item"><span class="edit" data-name="mondo_name"
+                                id="info_mondo_name"></span></li>
+                            <li class="list-group-item"><span class="edit" data-name="mondo_mau"
+                                id="info_mondo_color"></span></li>
                             <li id="info_mondo_bienso_li" class="list-group-item">Biển số : <span class="edit"
-                                id="info_mondo_bienso"></span></li>
+                                data-name="bienso" id="info_mondo_bienso"></span></li>
                             <li class="list-group-item"><img id="info_mondo_url" width="320" height="240" /></li>
                           </ul>
+
+                          <div class="panel panel-default col-md-12">
+                            <div class="panel-heading">Nhật kí</div>
+                            <div class="panel-body">
+                              <span id="log"></span>
+                            </div>
+                          </div>
+
 
                         </div>
 
@@ -256,8 +273,8 @@
                 </div>
               </div>
               <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Đóng</button>
+                <button type="button" class="btn btn-primary" onclick="saveChange()">Lưu lại</button>
                 <button type="button" class="btn btn-primary">In Hóa Đơn</button>
               </div>
 
@@ -296,6 +313,18 @@
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.js"></script>
 
 <script>
+  function saveChange() {
+    _yes = confirm("Bạn có chắc chắn muốn chỉnh sửa hay không");
+    if (_yes) {
+      console.log('a')
+      $('.bs-example-modal-lg').modal('hide');
+      //query string
+
+    } else {
+
+    }
+  }
+  var accountName = "<br/> <span class='txt_decor'><%= acc_name %></span> : ";
   $.fn.inlineEdit = function (replaceWith, connectWith) {
 
     $(this).hover(function () {
@@ -317,8 +346,9 @@
         if (event.keyCode == 13) {
           _oldVal = elem.text();
           _newVal = $(this).val();
-          _a = elem.parent();
-          _b = _a.children()[0].innerText;
+          //get data-name 
+
+          _data_name = elem[0].dataset["name"];
 
           if (_newVal == "") {
             //khong thay doi, lay lai gia tri cu
@@ -326,40 +356,124 @@
             elem.show();
             return;
           }
-          if (_b == "Số tiền") {
-            _yes = confirm("Bạn muốn đổi " + _b + " = [" + _oldVal + "] Thành [" + _newVal + "]")
-            if (_yes) {
-              if ($(this).val() != "") {
-                connectWith.val($(this).val()).change();
-                elem.text(formatNumber((this).val()));
+          switch (_data_name) {
+
+            case "name": {
+              _yes = confirm("Bạn muốn đổi Tên người cầm  [" + _oldVal + "] Thành [" + _newVal + "]")
+              if (_yes) {
+                if ($(this).val() != "") {
+                  connectWith.val($(this).val()).change();
+                  elem.text($(this).val());
+
+                  log_update += "<p>" + accountName + " Đã Đổi tên " + _oldVal + " Thành " + _newVal + "</span>";
+                }
+                $(this).remove();
+                elem.show();
+              } else {
+                $(this).remove();
+                elem.show();
               }
-              $(this).remove();
-              elem.show();
-            } else {
-              $(this).remove();
-              elem.show();
-            }
-          } else {
-            _yes = confirm("Bạn muốn đổi " + _b + " = [" + _oldVal + "] Thành [" + _newVal + "]")
-            if (_yes) {
-              if ($(this).val() != "") {
-                connectWith.val($(this).val()).change();
-                elem.text($(this).val());
+            } break;
+            case "tieno": {
+              _yes = confirm("Bạn muốn đổi TIền nợ  [" + _oldVal + "] Thành [" + _newVal + "]")
+              if (_yes) {
+                if ($(this).val() != "") {
+                  connectWith.val($(this).val()).change();
+                  elem.text($(this).val());
+                }
+                $(this).remove();
+                elem.show();
+
+                log_update += "<span>" + accountName + " Đã Đổi tiền nợ " + _oldVal + " Thành " + _newVal + "</span>";
+              } else {
+                $(this).remove();
+                elem.show();
               }
-              $(this).remove();
-              elem.show();
-            } else {
-              $(this).remove();
-              elem.show();
-            }
+            } break;
+            case "ghichu": {
+              _yes = confirm("Bạn muốn đổi ghi chú  [" + _oldVal + "] Thành [" + _newVal + "]")
+              if (_yes) {
+                if ($(this).val() != "") {
+                  connectWith.val($(this).val()).change();
+                  elem.text($(this).val());
+                }
+                $(this).remove();
+                elem.show();
+                log_update += "<span>" + accountName + " Đã Đổi ghi chú " + _oldVal + " Thành " + _newVal + "</span>";
+              } else {
+                $(this).remove();
+                elem.show();
+              }
+            } break;
+            case "phone": {
+              _yes = confirm("Bạn muốn đổi điện thoại người cầm  [" + _oldVal + "] Thành [" + _newVal + "]")
+              if (_yes) {
+                if ($(this).val() != "") {
+                  connectWith.val($(this).val()).change();
+                  elem.text($(this).val());
+                }
+                $(this).remove();
+                elem.show();
+                log_update += "<span>" + accountName + " Đã Đổi số điện thoại " + _oldVal + " Thành " + _newVal + "</span>";
+              } else {
+                $(this).remove();
+                elem.show();
+              }
+            } break;
+            case "money": {
+              _yes = confirm("Bạn muốn đổi số tiền [" + _oldVal + "] Thành [" + formatNumber(_newVal.toString()) + "]")
+              if (_yes) {
+                if ($(this).val() != "") {
+                  connectWith.val($(this).val()).change();
+                  elem.text(formatNumber(_newVal.toString()));
+                  log_update += "<span>" + accountName + " Đã Đổi Số tiền " + _oldVal + " Thành " + formatNumber(_newVal.toString()) + "</span>";
+                }
+                $(this).remove();
+                elem.show();
+              } else {
+                $(this).remove();
+                elem.show();
+              }
+            } break;
+            case "laixuat": {
+              _yes = confirm("Bạn muốn đổi lãi xuất [" + _oldVal + "] Thành [" + formatNumber(_newVal.toString()) + "]")
+              if (_yes) {
+                if ($(this).val() != "") {
+                  connectWith.val($(this).val()).change();
+                  elem.text((_newVal.toString()));
+                  log_update += "<span>" + accountName + " Đã Đổi lãi xuất " + _oldVal + " Thành " + (_newVal.toString()) + "</span>";
+                }
+                $(this).remove();
+                elem.show();
+              } else {
+                $(this).remove();
+                elem.show();
+              }
+            } break;
+            default: {
+              _yes = confirm("Bạn muốn thay [" + _oldVal + "] Thành [" + formatNumber(_newVal.toString()) + "]")
+              if (_yes) {
+                if ($(this).val() != "") {
+                  connectWith.val($(this).val()).change();
+                  elem.text((_newVal.toString()));
+                  log_update += "<span>" + accountName + " Đã Đổi " + _oldVal + " Thành " + (_newVal.toString()) + "</span>";
+                }
+                $(this).remove();
+                elem.show();
+              } else {
+                $(this).remove();
+                elem.show();
+              }
+            } break;
           }
 
+          $("#log").html(log_update);
           replaceWith.val("")
         }
       })
     });
   };
-
+  var log_update = "Món đồ mã số ";
 </script>
 
 <script>
@@ -447,7 +561,9 @@
 
 
   });
+  idMondo = 0;
   function menu_click(a) {
+    log_update = "Món đồ mã số ";
     DataId = a.dataset.id;
     _url = "ajax_pawn_item_get?id=" + DataId;
     //blur screen
@@ -457,8 +573,12 @@
     }).done(function (data) {
       //data for modal
       info = data[0];
+      idMondo = info.id;
+      log_update += idMondo;
+
       _a = JSON.parse(info.mondo);
       $('#modal_title').html('Thông Tin Cho Mã Đồ :' + info.id);
+
       $('#modal_id').text(info.id);
 
       $("#info_id").text(info.id);
