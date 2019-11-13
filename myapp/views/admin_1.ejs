@@ -17,19 +17,14 @@
   <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css">
 
   <style>
-    .editor_pic {
-      cursor: pointer;
-      font-size: 20px;
-      color: red;
-    }
-
-    .modal-body input[type=text] {
-      display: none;
-    }
-
     table i:hover {
       cursor: pointer;
       color: dodgerblue;
+    }
+
+    ul span {
+      text-decoration: underline dotted grey;
+      cursor: pointer;
     }
 
     #cover {
@@ -218,69 +213,41 @@
                   <div class="row">
                     <div class="col-md-12">
                       <div class="row">
-                        <div class="col-md-12">
+
+                        <div class="col-md-6">
+                          <ul class="list-group">
+                            <li class="list-group-item"><span>ID</span> : <span id="info_id"></span></li>
+                            <li class="list-group-item "><span>Tên</span> : <span class="edit" id="info_name"></span>
+                            </li>
+
+                            <li class="list-group-item">Số Tiền : <span class="edit" id="info_money"></span></li>
+                            <li class="list-group-item">Số điện thoại : <span class="edit" id="info_phone"></span></li>
 
 
-                          <table id="info" class="table table-bordered table-sm ">
-                            <tr>
-                              <td>ID</td>
-                              <td><span id="info_id"></span></td>
-                              <td>Change</td>
-                            </tr>
-                            <tr>
-                              <td>Tên</td>
-                              <td><span id="info_name"></span></td>
-                              <td>Change</td>
-                            </tr>
-                            <tr>
-                              <td>Số Tiền</td>
-                              <td><span id="info_money"></span></td>
-                              <td>Change</td>
-                            </tr>
-                            <tr>
-                              <td>Số điện thoại</td>
-                              <td><span id="info_phone"></span></td>
-                              <td>Change</td>
-                            </tr>
-                            <tr>
-                              <td>Món</td>
-                              <td>
-                                <ul class="list-group">
-                                  <li class="list-group-item"><span id="info_mondo_name"></span></li>
-                                  <li class="list-group-item"><span id="info_mondo_color"></span></li>
-                                  <li id="info_mondo_bienso_li" class="list-group-item">Biển số : <span
-                                      id="info_mondo_bienso"></span></li>
-                                  <li class="list-group-item"><img id="info_mondo_url" width="320" height="240" /></li>
-                                </ul>
-                              </td>
-                              <td>Change</td>
-                            </tr>
-                            <tr>
-                              <td>Thông tin</td>
-                              <td>
-                                <ul class="list-group">
-                                  <li class="list-group-item">Ngày thế :<span id="info_ngaythe"></span></li>
-                                  <li class="list-group-item">Ngày tới hạn :<span id="info_ngaytoihan"></span></li>
-                                  <li class="list-group-item">Lãi xuất (%) :<span id="info_laixuat"></span></li>
-                                  <li class="list-group-item">Lãi ( tới hôm nay) :<span id="info_tienlai"></span></li>
-                                  <li class="list-group-item">Sale :<span id="info_sale"></span></li>
-                                  <li id="info_cmnd_li" class="list-group-item">Cmnd :<span id="info_cmnd"></span> -
-                                    Ngày Cấp :<span id="info_cmnd_date"></span> </li>
-                                  <li class="list-group-item">Tình Trạng :<span id="info_tinhtrang"></span></li>
-                                  <li class="list-group-item">Tiền nợ :<span id="info_tienno"></span></li>
-                                  <li class="list-group-item">Ghi Chú :<span id="info_ghichu"></span></li>
+                            <li class="list-group-item">Ngày thế :<span id="info_ngaythe"></span></li>
+                            <li class="list-group-item">Ngày tới hạn :<span id="info_ngaytoihan"></span></li>
+                            <li class="list-group-item">Lãi xuất (%) :<span class="edit" id="info_laixuat"></span></li>
+                            <li class="list-group-item">Lãi ( tới hôm nay) :<span id="info_tienlai"></span></li>
+                            <li class="list-group-item">Sale :<span id="info_sale"></span></li>
+                            <li id="info_cmnd_li" class="list-group-item">Cmnd :<span id="info_cmnd"></span> -
+                              Ngày Cấp :<span id="info_cmnd_date"></span> </li>
+                            <li class="list-group-item">Tình Trạng :<span id="info_tinhtrang"></span></li>
+                            <li class="list-group-item">Tiền nợ :<span class="edit" id="info_tienno"></span></li>
+                            <li class="list-group-item">Ghi Chú :<span class="edit" id="info_ghichu"></span></li>
 
-                                </ul>
-                              </td>
-                              <td>Change</td>
-                            </tr>
-                            <tr>
-                              <td colspan="3">
-                                <p></p>
-                              </td>
-                            </tr>
+                          </ul>
 
-                          </table>
+                        </div>
+                        <div class="col-md-6">
+
+                          <ul class="list-group">
+                            <li class="list-group-item"><span class="edit" id="info_mondo_name"></span></li>
+                            <li class="list-group-item"><span class="edit" id="info_mondo_color"></span></li>
+                            <li id="info_mondo_bienso_li" class="list-group-item">Biển số : <span class="edit"
+                                id="info_mondo_bienso"></span></li>
+                            <li class="list-group-item"><img id="info_mondo_url" width="320" height="240" /></li>
+                          </ul>
+
                         </div>
 
                       </div>
@@ -327,9 +294,76 @@
 
 
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.js"></script>
-<script src="js/editabletable.js" type="text/javascript"></script>
 
 <script>
+  $.fn.inlineEdit = function (replaceWith, connectWith) {
+
+    $(this).hover(function () {
+      $(this).addClass('hover');
+    }, function () {
+      $(this).removeClass('hover');
+    });
+
+
+    $(this).click(function () {
+
+      var elem = $(this);
+
+      elem.hide();
+      elem.after(replaceWith);
+      replaceWith.focus();
+      replaceWith.keypress(function (event) {
+
+        if (event.keyCode == 13) {
+          _oldVal = elem.text();
+          _newVal = $(this).val();
+          _a = elem.parent();
+          _b = _a.children()[0].innerText;
+
+          if (_newVal == "") {
+            //khong thay doi, lay lai gia tri cu
+            $(this).remove();
+            elem.show();
+            return;
+          }
+          if (_b == "Số tiền") {
+            _yes = confirm("Bạn muốn đổi " + _b + " = [" + _oldVal + "] Thành [" + _newVal + "]")
+            if (_yes) {
+              if ($(this).val() != "") {
+                connectWith.val($(this).val()).change();
+                elem.text(formatNumber((this).val()));
+              }
+              $(this).remove();
+              elem.show();
+            } else {
+              $(this).remove();
+              elem.show();
+            }
+          } else {
+            _yes = confirm("Bạn muốn đổi " + _b + " = [" + _oldVal + "] Thành [" + _newVal + "]")
+            if (_yes) {
+              if ($(this).val() != "") {
+                connectWith.val($(this).val()).change();
+                elem.text($(this).val());
+              }
+              $(this).remove();
+              elem.show();
+            } else {
+              $(this).remove();
+              elem.show();
+            }
+          }
+
+          replaceWith.val("")
+        }
+      })
+    });
+  };
+
+</script>
+
+<script>
+
   function formatNumber(n) {
     // format number 1000000 to 1,234,567
     return n.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ",")
@@ -350,6 +384,11 @@
     }
   }
   $(document).ready(function () {
+    __str = '<input type="text" class="form-control"></div>';
+    var replaceWith = $(__str);
+    connectWith = $('input[name="hiddenField"]');
+
+    $('.edit').inlineEdit(replaceWith, connectWith);
 
     var table = $('#table_id').DataTable({
       "ajax": '/ajax_pawn_item_get_all',
@@ -405,7 +444,7 @@
       }
     });
 
-    $('#info').editableTableWidget();
+
 
   });
   function menu_click(a) {
@@ -465,5 +504,6 @@
 
 
 </script>
+
 
 </html>
