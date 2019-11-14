@@ -352,6 +352,7 @@
     laixuat: 0,
     id: 0
   }
+  var new_query = "";
   var table = $('#table_id').DataTable({
     "ajax": '/ajax_pawn_item_get_all',
     "columns": [
@@ -425,6 +426,7 @@
     });
   }
   function saveChange() {
+   var queryNew = "";
     _yes = confirm("Bạn có chắc chắn muốn chỉnh sửa hay không");
     if (_yes) {
 
@@ -466,22 +468,28 @@
         ",`laixuat`='" + last_query.laixuat + "'" +
         ",`ghichu`=' " + last_query.ghichu + "'" +
         " WHERE `id` = " + last_query.id;
+
       noti_info = {
         containt: log_update,
         date: _dateStr,
-        last_query: _lastQuery,
-        new_query: queryNew,
+        last_query: _url,
+        new_query:this.queryNew,
         lido: "abcxyz"
       }
+
       strQuery = "INSERT INTO `notification` (`id`, `containt`, `date`, `last_query`, `newquery`, `lido`)" +
-        " VALUES (NULL,'" + noti_info.containt + "','" + noti_info.date + "' , '" + noti_info.last_query + "', '" + new_query + "', '" + noti_info.lido + "')";
-      //INSERT INTO `notification` (`id`, `containt`, `date`, `last_query`, `newquery`, `lido`) VALUES (NULL, '', '', '', '', '', '', '')
-      //call ajax
-      _url = "do_pawn_notifi_insert?query" + encodeURI(strQuery);
+        " VALUES (NULL,'" + noti_info.containt + "','" + noti_info.date + "' , \"" + noti_info.last_query + "\", '" + noti_info.new_query + "', '" + noti_info.lido + "')";
+    
+
+      
+
+      _url1 = "do_pawn_notifi_insert?query=" + encodeURI(strQuery);
+
+      console.log(_url1)
       $.ajax({
         url: _url
       }).done(function (data) {
-        alert('d')
+
       });
     } else {
 

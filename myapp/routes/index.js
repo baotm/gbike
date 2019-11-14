@@ -169,10 +169,10 @@ router.get('/pawn_submit', function (req, res) {
 });
 router.get("/do_pawn_notifi_insert", function (req, res) {
   strQuery = decodeURI(req.query.query);
-  var connection = getConnect();
-  re = connection.query(strQuery);
-  connection.dispose();
-  res.send('200')
+  //var connection = getConnect();
+  //re = connection.query(strQuery);
+  //connection.dispose();
+  res.send(strQuery)
 });
 router.get('/bill', function (req, res) {
   name = req.query.name;
