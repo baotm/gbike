@@ -169,10 +169,39 @@ router.get('/pawn_submit', function (req, res) {
 });
 router.get("/do_pawn_notifi_insert", function (req, res) {
   strQuery = decodeURI(req.query.query);
-  //var connection = getConnect();
-  //re = connection.query(strQuery);
-  //connection.dispose();
+  var connection = getConnect();
+  re = connection.query(strQuery);
+  connection.dispose();
   res.send(strQuery)
+});
+router.get("/do_pawn_chuocdo", function (req, res) {
+  id = decodeURI(req.query.id);
+  ngaychuoc = decodeURI(req.query.ngaychuoc);
+  tinhtrang = "Đã chuộc";
+  tienlai = decodeURI(req.query.tienlai);
+
+  //UPDATE `docam` SET `ngaychuoc`=[value-8],`trinhtrang`=[value-9],`tienlai`=[value-11] WHERE 1
+  strQuery = "UPDATE `docam` SET `ngaychuoc`='" + ngaychuoc + "',`trinhtrang`='" + tinhtrang + "',`tienlai`=" + tienlai + " WHERE id=" + id
+  var connection = getConnect();
+  re = connection.query(strQuery);
+  connection.dispose();
+  res.send(id + "|" + tienlai);
+});
+
+router.get("/do_pawn_donglai", function (req, res) {
+
+  id = decodeURI(req.query.id);
+  ngaydonglai = decodeURI(req.query.ngaydonglai);
+  tienlai = decodeURI(req.query.tienlai);
+  diff=  decodeURI(req.query.diff);
+  //UPDATE `docam` SET `ngaychuoc`=[value-8],`trinhtrang`=[value-9],`tienlai`=[value-11] WHERE 1
+  strQuery = "UPDATE `docam` SET `ngaycam` = '"+ngaydonglai+"' ,`tienlai`=" + tienlai + ",`ghichu`='"+'Đã đóng lãi : '+ngaydonglai+" ' WHERE id=" + id
+  var connection = getConnect();
+  re = connection.query(strQuery);
+  connection.dispose();
+
+  res.send(id + "|" + tienlai+"|"+diff);
+
 });
 router.get('/bill', function (req, res) {
   name = req.query.name;

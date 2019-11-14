@@ -285,11 +285,19 @@
                             <li id="info_mondo_bienso_li" class="list-group-item">Biển số : <span data-name="bienso"
                                 id="info_mondo_bienso"></span></li>
                             <li class="list-group-item"><img id="info_mondo_url" width="320" height="240" /></li>
+                            <li class="list-group-item">
+                              <div class="form-group">
+                                <label for="exampleFormControlInput1">lí do sửa:</label>
+                                <input type="text" class="form-control" id="lido">
+                              </div>
+                            </li>
                           </ul>
 
                           <div class="panel panel-default col-md-12">
                             <div class="panel-heading">Nhật kí</div>
                             <div class="panel-body">
+
+
                               <span id="log"></span>
                             </div>
                           </div>
@@ -387,8 +395,8 @@
       {
         "data": function (d) {
           id = d.id;
-          strUpdate = '<i data-id="' + id + '" class="fa fa-arrow-circle-o-up fa-2x update" title="đóng lãi" aria-hidden="true"></i>&nbsp;&nbsp';
-          strChuoc = '<i data-id="' + id + '" class="fa fa-money fa-2x chuoc" title="Chuộc" aria-hidden="true"></i>&nbsp;&nbsp;';
+          strUpdate = '<i onclick="dongLai(this)" data-id="' + id + '" class="fa fa-arrow-circle-o-up fa-2x update" title="đóng lãi" aria-hidden="true"></i>&nbsp;&nbsp';
+          strChuoc = '<i onclick="chuocDo(this)" data-id="' + id + '" class="fa fa-money fa-2x chuoc" title="Chuộc" aria-hidden="true"></i>&nbsp;&nbsp;';
           strMenu = '<i onclick="menu_click(this)" data-id="' + id + '" class="fa fa-bars fa-2x menu" aria-hidden="true"></i>';
 
           return strUpdate + strChuoc + strMenu;
@@ -397,36 +405,102 @@
     ]
   });
 
-  function dongLai() {
+  function dongLai(a) {
 
-    $('.bs-example-modal-lg').modal('show');
+    id = a.dataset["id"];
+    _yes = confirm("Bạn muốn đóng lãi món đồ mã số " + id);
+    if (!_yes) {
+      return;
+    }
     $("#cover").show();
-    id = $("#info_id").text();
-    _url = "do_pawn_donglai?id=" + id;
+    b = table.data();
+    info = function () {
+      for (i = 0; i < b.length; i++) {
+        _id = b[i].id;
+        if (_id == id) {
+          return {
+            ngaycam: b[i].ngaycam,
+            laixuat: b[i].laixuat,
+            sotien: b[i].sotien
+          }
+        }
+      }
+    }();
+    _date = info.ngaycam.split('/');
+    var d1 = new Date();
+    var d2 = new Date(_date[2], (parseInt(_date[1]) - 1), _date[0])
+    const diffTime = Math.abs(d2 - d1);
+    const diffDays = (Math.ceil(diffTime / (1000 * 60 * 60 * 24)));
+    tienlai = ((parseInt(diffDays)) * parseInt(info.laixuat) * parseInt(info.sotien)) / 1000;
+    tienlai = Math.round(tienlai / 10000) * 1000;
+
+    strDay = d1.getDate() + "/" + d1.getMonth() + "/" + d1.getFullYear();
+    //can id, ngaychuoc, tienlai
+    _url = "do_pawn_donglai?id=" + id + "&ngaydonglai=" + strDay + "&tienlai=" + tienlai+"&diff="+diffDays;
+    console.log(_url);
     $.ajax({
       url: _url
     }).done(function (data) {
-      alert('Đóng lãi Xong')
+
+      _a = data.split('|');
+      id = _a[0];
+      tienlai = _a[1];
+      diff = _a[2];
+      alert('Đóng lãi Món đồ ' + id + ' Đã cầm :'+diff+' ngày Tiền lãi :' + formatNumber(tienlai.toString()))
       table.ajax.reload();
       $("#cover").hide();
-      $('.bs-example-modal-lg').modal('hide');
-
     });
   }
-  function chuocDo() {
-    id = $("#info_id").text();
-    _url = "do_pawn_chuocdo?id=" + id;
+  function chuocDo(a) {
+    id = a.dataset["id"];
+    _yes = confirm("Bạn muốn chuộc món đồ mã số " + id);
+    if (!_yes) {
+      return;
+    }
+    $("#cover").show();
+    b = table.data();
+    info = function () {
+      for (i = 0; i < b.length; i++) {
+        _id = b[i].id;
+        if (_id == id) {
+          return {
+            ngaycam: b[i].ngaycam,
+            laixuat: b[i].laixuat,
+            sotien: b[i].sotien
+          }
+        }
+      }
+    }();
+    _date = info.ngaycam.split('/');
+    var d1 = new Date();
+    var d2 = new Date(_date[2], (parseInt(_date[1]) - 1), _date[0])
+    const diffTime = Math.abs(d2 - d1);
+    const diffDays = (Math.ceil(diffTime / (1000 * 60 * 60 * 24)));
+    tienlai = (parseInt(diffDays) * parseInt(info.laixuat) * parseInt(info.sotien)) / 1000;
+    tienlai = Math.round(tienlai / 10000) * 1000;
+
+    strDay = d1.getDate() + "/" + d1.getMonth() + "/" + d1.getFullYear();
+    //can id, ngaychuoc, tienlai
+    _url = "do_pawn_chuocdo?id=" + id + "&ngaychuoc=" + strDay + "&tienlai=" + tienlai+"&diff="+diffDays;
+    console.log(_url);
     $.ajax({
       url: _url
     }).done(function (data) {
-      alert('Update Xong')
-      $('.bs-example-modal-lg').modal('hide');
-      $("#log").html("");
+      _a = data.split('|');
+      id = _a[0];
+      tienlai = _a[1];
+      diff = _a[2];
+      alert('Chuộc thành công Món đồ ' + id + ' Đã cầm :'+diff+' ngày Tiền lãi :' + formatNumber(tienlai.toString()))
       table.ajax.reload();
+      $("#cover").hide();
     });
   }
   function saveChange() {
-   var queryNew = "";
+    if ($("#lido").val() == "") {
+      alert('Vui lòng điền vào lí do');
+      return false;
+    }
+    var queryNew = "";
     _yes = confirm("Bạn có chắc chắn muốn chỉnh sửa hay không");
     if (_yes) {
 
@@ -434,7 +508,7 @@
       //UPDATE `docam` SET `ten`=[value-2],`sodienthoai`=[value-3],`mondo`=[value-4],`sotien`=[value-5],`ngaycam`=[value-7],`ngaychuoc`=[value-8],`tienno`=[value-10],`laixuat`=[value-12],`ghichu`=[value-13] WHERE `id` = 
       id = $("#info_id").text();
       name = $("#info_name").text();
-      sodienthoai = $("#info_id").text();
+      sodienthoai = $("#info_phone").text();
       sotien = $("#info_money").text().replace(/,/g, '');
       tienno = $("#info_id").text();
       laixuat = $("#info_laixuat").text();
@@ -453,13 +527,10 @@
       $.ajax({
         url: _url
       }).done(function (data) {
-        alert('Update Xong')
-        $('.bs-example-modal-lg').modal('hide');
-        $("#log").html("");
-        table.ajax.reload();
+
       });
       d = new Date();
-      _dateStr = d.getDate() + "\\" + d.getMonth() + "\\" + d.getYear()
+      _dateStr = d.getDate() + "\\" + d.getMonth() + "\\" + d.getFullYear()
       _lastQuery = "UPDATE `docam` SET " +
         "`ten`= '" + last_query.name +
         "',`sodienthoai`='" + last_query.sodienthoai +
@@ -470,26 +541,22 @@
         " WHERE `id` = " + last_query.id;
 
       noti_info = {
-        containt: log_update,
+        containt: $("#log").text(),
         date: _dateStr,
-        last_query: _url,
-        new_query:this.queryNew,
-        lido: "abcxyz"
+        lido: $("#lido").text()
       }
-
       strQuery = "INSERT INTO `notification` (`id`, `containt`, `date`, `last_query`, `newquery`, `lido`)" +
-        " VALUES (NULL,'" + noti_info.containt + "','" + noti_info.date + "' , \"" + noti_info.last_query + "\", '" + noti_info.new_query + "', '" + noti_info.lido + "')";
-    
-
-      
-
+        " VALUES (NULL,'" + noti_info.containt + "','" + noti_info.date + "' , \"" + _lastQuery + "\", \"" + queryNew + "\", '" + noti_info.lido + "')";
       _url1 = "do_pawn_notifi_insert?query=" + encodeURI(strQuery);
-
-      console.log(_url1)
+      console.log(_url1);
       $.ajax({
-        url: _url
+        url: _url1
       }).done(function (data) {
-
+        alert('Update Xong')
+        $('.bs-example-modal-lg').modal('hide');
+        $("#log").html("");
+        $("#lido").val("");
+        table.ajax.reload();
       });
     } else {
 
@@ -551,7 +618,7 @@
               }
             } break;
             case "tienno": {
-              _yes = confirm("Bạn muốn đổi TIền nợ  [" + _oldVal + "] Thành [" + _newVal + "]")
+              _yes = confirm("Bạn muốn đổi Tiền nợ  [" + _oldVal + "] Thành [" + _newVal + "]")
               if (_yes) {
                 if ($(this).val() != "") {
                   connectWith.val($(this).val()).change();
