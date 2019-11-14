@@ -40,6 +40,15 @@ router.get('/', function (req, res, next) {
     res.redirect('/login?action=first')
   }
 });
+router.get('/do_pawn_update', function (req, res) {
+  strQuery = decodeURI(req.query.query);
+  console.log("------------------")
+  console.log(strQuery);
+  var connection = getConnect();
+  re = connection.query((strQuery));
+  connection.dispose();
+  res.send('200');
+});
 router.get('/logout', function (req, res) {
   req.session.destroy();
   res.redirect('/login?action=first');
@@ -49,9 +58,7 @@ router.post('/upload_picture', function (req, res) {
   img = req.body.img;
   url = "./public/image_pawn/";
   name = url + decodeURI(req.body.name) + ".png";
-  console.log(name)
   var base64Data = img.replace(/^data:image\/jpeg;base64,/, "");
-
   require("fs").writeFile(name, base64Data, 'base64', function (err) {
   });
 
@@ -160,6 +167,13 @@ router.get('/pawn_submit', function (req, res) {
   res.send('200')
 
 });
+router.get("/do_pawn_notifi_insert", function (req, res) {
+  strQuery = decodeURI(req.query.query);
+  var connection = getConnect();
+  re = connection.query(strQuery);
+  connection.dispose();
+  res.send('200')
+});
 router.get('/bill', function (req, res) {
   name = req.query.name;
   phone = req.query.phone;
@@ -235,7 +249,7 @@ router.get('/ajax_pawn_item_get_all', function (req, res) {
   connection.dispose();
   _re += JSON.stringify(re);
   _re += '}';
-_re.replace(/\\/g,'');
+  _re.replace(/\\/g, '');
   res.send(_re);
 })
 

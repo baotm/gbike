@@ -73,6 +73,7 @@
               <h2><%= acc_name %></h2>
             </div>
             <div class="clearfix"></div>
+
           </div>
           <!-- /menu profile quick info -->
 
@@ -134,8 +135,37 @@
                 </div>
               </li>
 
+              <li class="nav-item dropdown open" style="padding-left: 15px;">
+                <a href="javascript:;" class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="false">
+                  <i class="fa fa-envelope-o"></i>
+                  <span class="badge bg-green">6</span>
+                </a>
+                <ul id="menu1" class="dropdown-menu list-unstyled msg_list" role="menu">
+                  <li>
+                    <a>
+                      <span class="image"><img src="images/img.jpg" alt="Profile Image" /></span>
+                      <span>
+                        <span>John Smith</span>
+                        <span class="time">3 mins ago</span>
+                      </span>
+                      <span class="message">
+                        Film festivals used to be do-or-die moments for movie makers. They were where...
+                      </span>
+                    </a>
+                  </li>
 
+                  <li>
+                    <div class="text-center">
+                      <a>
+                        <strong>See All Alerts</strong>
+                        <i class="fa fa-angle-right"></i>
+                      </a>
+                    </div>
+                  </li>
+                </ul>
+              </li>
             </ul>
+
           </nav>
         </div>
       </div>
@@ -237,7 +267,7 @@
                             <li id="info_cmnd_li" class="list-group-item">Cmnd :<span id="info_cmnd"></span> -
                               Ngày Cấp :<span id="info_cmnd_date"></span> </li>
                             <li class="list-group-item">Tình Trạng :<span id="info_tinhtrang"></span></li>
-                            <li class="list-group-item">Tiền nợ :<span data-name="tieno" class="edit"
+                            <li class="list-group-item">Tiền nợ :<span data-name="tienno" class="edit"
                                 id="info_tienno"></span></li>
                             <li class="list-group-item">Ghi Chú :<span data-name="ghichu" class="edit"
                                 id="info_ghichu"></span></li>
@@ -248,12 +278,12 @@
                         <div class="col-md-6">
 
                           <ul class="list-group">
-                            <li class="list-group-item"><span class="edit" data-name="mondo_name"
-                                id="info_mondo_name"></span></li>
-                            <li class="list-group-item"><span class="edit" data-name="mondo_mau"
-                                id="info_mondo_color"></span></li>
-                            <li id="info_mondo_bienso_li" class="list-group-item">Biển số : <span class="edit"
-                                data-name="bienso" id="info_mondo_bienso"></span></li>
+                            <li class="list-group-item">Món : <span data-name="mondo_name" id="info_mondo_name"></span>
+                            </li>
+                            <li class="list-group-item">Màu : <span data-name="mondo_mau" id="info_mondo_color"></span>
+                            </li>
+                            <li id="info_mondo_bienso_li" class="list-group-item">Biển số : <span data-name="bienso"
+                                id="info_mondo_bienso"></span></li>
                             <li class="list-group-item"><img id="info_mondo_url" width="320" height="240" /></li>
                           </ul>
 
@@ -313,13 +343,146 @@
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.js"></script>
 
 <script>
+  var last_query = {
+    ten: "",
+    sodienthoai: "",
+    sotien: 0,
+    tienno: 0,
+    ghichu: "",
+    laixuat: 0,
+    id: 0
+  }
+  var table = $('#table_id').DataTable({
+    "ajax": '/ajax_pawn_item_get_all',
+    "columns": [
+      { "data": "id" },
+      { "data": "ten" },
+      {
+        "data": function (d) {
+          _a = formatNumber(d.sotien.toString());
+          return _a;
+        }
+      },
+      {
+        "data": function (d) {
+          _a = JSON.parse(d.mondo);
+          str = _a.loaihang;
+          return str;
+        }
+      },
+      { "data": "ngaycam" },
+      { "data": "trinhtrang" },
+      {
+        "data": function (d) {
+          _date = d.ngaycam.split('/');
+          var d1 = new Date();
+          var d2 = new Date(_date[2], (parseInt(_date[1]) - 1), _date[0])
+          const diffTime = Math.abs(d2 - d1);
+          const diffDays = (Math.ceil(diffTime / (1000 * 60 * 60 * 24)));
+          tienlai = (parseInt(diffDays) * parseInt(d.laixuat) * parseInt(d.sotien)) / 1000;
+          return formatNumber(tienlai.toString());
+        }
+      },
+      {
+        "data": function (d) {
+          id = d.id;
+          strUpdate = '<i data-id="' + id + '" class="fa fa-arrow-circle-o-up fa-2x update" title="đóng lãi" aria-hidden="true"></i>&nbsp;&nbsp';
+          strChuoc = '<i data-id="' + id + '" class="fa fa-money fa-2x chuoc" title="Chuộc" aria-hidden="true"></i>&nbsp;&nbsp;';
+          strMenu = '<i onclick="menu_click(this)" data-id="' + id + '" class="fa fa-bars fa-2x menu" aria-hidden="true"></i>';
+
+          return strUpdate + strChuoc + strMenu;
+        }
+      }
+    ]
+  });
+
+  function dongLai() {
+
+    $('.bs-example-modal-lg').modal('show');
+    $("#cover").show();
+    id = $("#info_id").text();
+    _url = "do_pawn_donglai?id=" + id;
+    $.ajax({
+      url: _url
+    }).done(function (data) {
+      alert('Đóng lãi Xong')
+      table.ajax.reload();
+      $("#cover").hide();
+      $('.bs-example-modal-lg').modal('hide');
+
+    });
+  }
+  function chuocDo() {
+    id = $("#info_id").text();
+    _url = "do_pawn_chuocdo?id=" + id;
+    $.ajax({
+      url: _url
+    }).done(function (data) {
+      alert('Update Xong')
+      $('.bs-example-modal-lg').modal('hide');
+      $("#log").html("");
+      table.ajax.reload();
+    });
+  }
   function saveChange() {
     _yes = confirm("Bạn có chắc chắn muốn chỉnh sửa hay không");
     if (_yes) {
-      console.log('a')
-      $('.bs-example-modal-lg').modal('hide');
-      //query string
 
+      //query string
+      //UPDATE `docam` SET `ten`=[value-2],`sodienthoai`=[value-3],`mondo`=[value-4],`sotien`=[value-5],`ngaycam`=[value-7],`ngaychuoc`=[value-8],`tienno`=[value-10],`laixuat`=[value-12],`ghichu`=[value-13] WHERE `id` = 
+      id = $("#info_id").text();
+      name = $("#info_name").text();
+      sodienthoai = $("#info_id").text();
+      sotien = $("#info_money").text().replace(/,/g, '');
+      tienno = $("#info_id").text();
+      laixuat = $("#info_laixuat").text();
+      ghichu = $("#info_ghichu").text();
+      //update notification
+      queryNew = "UPDATE `docam` SET " +
+        "`ten`= '" + name +
+        "',`sodienthoai`='" + sodienthoai +
+        "',`sotien`=" + sotien +
+        ",`tienno`='" + tienno + "'" +
+        ",`laixuat`='" + laixuat + "'" +
+        ",`ghichu`=' " + ghichu + "'" +
+        " WHERE `id` = " + id;
+      _url = "do_pawn_update?query=" + encodeURI(queryNew);
+      //call ajax to server
+      $.ajax({
+        url: _url
+      }).done(function (data) {
+        alert('Update Xong')
+        $('.bs-example-modal-lg').modal('hide');
+        $("#log").html("");
+        table.ajax.reload();
+      });
+      d = new Date();
+      _dateStr = d.getDate() + "\\" + d.getMonth() + "\\" + d.getYear()
+      _lastQuery = "UPDATE `docam` SET " +
+        "`ten`= '" + last_query.name +
+        "',`sodienthoai`='" + last_query.sodienthoai +
+        "',`sotien`=" + last_query.sotien +
+        ",`tienno`='" + last_query.tienno + "'" +
+        ",`laixuat`='" + last_query.laixuat + "'" +
+        ",`ghichu`=' " + last_query.ghichu + "'" +
+        " WHERE `id` = " + last_query.id;
+      noti_info = {
+        containt: log_update,
+        date: _dateStr,
+        last_query: _lastQuery,
+        new_query: queryNew,
+        lido: "abcxyz"
+      }
+      strQuery = "INSERT INTO `notification` (`id`, `containt`, `date`, `last_query`, `newquery`, `lido`)" +
+        " VALUES (NULL,'" + noti_info.containt + "','" + noti_info.date + "' , '" + noti_info.last_query + "', '" + new_query + "', '" + noti_info.lido + "')";
+      //INSERT INTO `notification` (`id`, `containt`, `date`, `last_query`, `newquery`, `lido`) VALUES (NULL, '', '', '', '', '', '', '')
+      //call ajax
+      _url = "do_pawn_notifi_insert?query" + encodeURI(strQuery);
+      $.ajax({
+        url: _url
+      }).done(function (data) {
+        alert('d')
+      });
     } else {
 
     }
@@ -341,6 +504,11 @@
       elem.hide();
       elem.after(replaceWith);
       replaceWith.focus();
+      replaceWith.click(function () {
+        $(this).remove();
+        elem.show();
+        return;
+      });
       replaceWith.keypress(function (event) {
 
         if (event.keyCode == 13) {
@@ -364,7 +532,7 @@
                 if ($(this).val() != "") {
                   connectWith.val($(this).val()).change();
                   elem.text($(this).val());
-
+                  last_query.name = _oldVal;
                   log_update += "<p>" + accountName + " Đã Đổi tên " + _oldVal + " Thành " + _newVal + "</span>";
                 }
                 $(this).remove();
@@ -374,17 +542,17 @@
                 elem.show();
               }
             } break;
-            case "tieno": {
+            case "tienno": {
               _yes = confirm("Bạn muốn đổi TIền nợ  [" + _oldVal + "] Thành [" + _newVal + "]")
               if (_yes) {
                 if ($(this).val() != "") {
                   connectWith.val($(this).val()).change();
-                  elem.text($(this).val());
+                  elem.text(formatNumber(_newVal.toString()));
                 }
                 $(this).remove();
                 elem.show();
-
-                log_update += "<span>" + accountName + " Đã Đổi tiền nợ " + _oldVal + " Thành " + _newVal + "</span>";
+                last_query.tienno = _oldVal;
+                log_update += "<span>" + accountName + " Đã Đổi tiền nợ " + _oldVal + " Thành " + formatNumber(_newVal.toString()) + "</span>";
               } else {
                 $(this).remove();
                 elem.show();
@@ -399,6 +567,7 @@
                 }
                 $(this).remove();
                 elem.show();
+                last_query.ghichu = _oldVal;
                 log_update += "<span>" + accountName + " Đã Đổi ghi chú " + _oldVal + " Thành " + _newVal + "</span>";
               } else {
                 $(this).remove();
@@ -414,6 +583,7 @@
                 }
                 $(this).remove();
                 elem.show();
+                last_query.sodienthoai = _oldVal;
                 log_update += "<span>" + accountName + " Đã Đổi số điện thoại " + _oldVal + " Thành " + _newVal + "</span>";
               } else {
                 $(this).remove();
@@ -426,6 +596,7 @@
                 if ($(this).val() != "") {
                   connectWith.val($(this).val()).change();
                   elem.text(formatNumber(_newVal.toString()));
+                  last_query.sotien = _oldVal;
                   log_update += "<span>" + accountName + " Đã Đổi Số tiền " + _oldVal + " Thành " + formatNumber(_newVal.toString()) + "</span>";
                 }
                 $(this).remove();
@@ -441,6 +612,7 @@
                 if ($(this).val() != "") {
                   connectWith.val($(this).val()).change();
                   elem.text((_newVal.toString()));
+                  last_query.laixuat = _oldVal;
                   log_update += "<span>" + accountName + " Đã Đổi lãi xuất " + _oldVal + " Thành " + (_newVal.toString()) + "</span>";
                 }
                 $(this).remove();
@@ -456,6 +628,7 @@
                 if ($(this).val() != "") {
                   connectWith.val($(this).val()).change();
                   elem.text((_newVal.toString()));
+
                   log_update += "<span>" + accountName + " Đã Đổi " + _oldVal + " Thành " + (_newVal.toString()) + "</span>";
                 }
                 $(this).remove();
@@ -504,49 +677,6 @@
 
     $('.edit').inlineEdit(replaceWith, connectWith);
 
-    var table = $('#table_id').DataTable({
-      "ajax": '/ajax_pawn_item_get_all',
-      "columns": [
-        { "data": "id" },
-        { "data": "ten" },
-        {
-          "data": function (d) {
-            _a = formatNumber(d.sotien.toString());
-            return _a;
-          }
-        },
-        {
-          "data": function (d) {
-            _a = JSON.parse(d.mondo);
-            str = _a.loaihang;
-            return str;
-          }
-        },
-        { "data": "ngaycam" },
-        { "data": "trinhtrang" },
-        {
-          "data": function (d) {
-            _date = d.ngaycam.split('/');
-            var d1 = new Date();
-            var d2 = new Date(_date[2], (parseInt(_date[1]) - 1), _date[0])
-            const diffTime = Math.abs(d2 - d1);
-            const diffDays = (Math.ceil(diffTime / (1000 * 60 * 60 * 24)));
-            tienlai = (parseInt(diffDays) * parseInt(d.laixuat) * parseInt(d.sotien)) / 1000;
-            return formatNumber(tienlai.toString());
-          }
-        },
-        {
-          "data": function (d) {
-            id = d.id;
-            strUpdate = '<i data-id="' + id + '" class="fa fa-arrow-circle-o-up fa-2x update" title="đóng lãi" aria-hidden="true"></i>&nbsp;&nbsp';
-            strChuoc = '<i data-id="' + id + '" class="fa fa-money fa-2x chuoc" title="Chuộc" aria-hidden="true"></i>&nbsp;&nbsp;';
-            strMenu = '<i onclick="menu_click(this)" data-id="' + id + '" class="fa fa-bars fa-2x menu" aria-hidden="true"></i>';
-
-            return strUpdate + strChuoc + strMenu;
-          }
-        }
-      ]
-    });
 
     $('#table_id tbody').on('click', 'tr', function () {
       if ($(this).hasClass('selected')) {
@@ -616,6 +746,14 @@
       $("#info_tinhtrang").text(info.trinhtrang);
       $("#info_tienno").text(info.tienno);
       $("#info_ghichu").text(info.ghichu);
+
+      last_query.id = info.id;
+      last_query.name = info.ten;
+      last_query.sodienthoai = info.sodienthoai;
+      last_query.tienno = info.tienno;
+      last_query.laixuat = info.laixuat;
+      last_query.sotien = info.sotien;
+      last_query.ghichu = info.ghichu;
 
       $('.bs-example-modal-lg').modal(); $("#cover").hide();
     });
