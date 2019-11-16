@@ -193,14 +193,14 @@ router.get("/do_pawn_donglai", function (req, res) {
   id = decodeURI(req.query.id);
   ngaydonglai = decodeURI(req.query.ngaydonglai);
   tienlai = decodeURI(req.query.tienlai);
-  diff=  decodeURI(req.query.diff);
+  diff = decodeURI(req.query.diff);
   //UPDATE `docam` SET `ngaychuoc`=[value-8],`trinhtrang`=[value-9],`tienlai`=[value-11] WHERE 1
-  strQuery = "UPDATE `docam` SET `ngaycam` = '"+ngaydonglai+"' ,`tienlai`=" + tienlai + ",`ghichu`='"+'Đã đóng lãi : '+ngaydonglai+" ' WHERE id=" + id
+  strQuery = "UPDATE `docam` SET `ngaycam` = '" + ngaydonglai + "' ,`tienlai`=" + tienlai + ",`ghichu`='" + 'Đã đóng lãi : ' + ngaydonglai + " ' WHERE id=" + id
   var connection = getConnect();
   re = connection.query(strQuery);
   connection.dispose();
 
-  res.send(id + "|" + tienlai+"|"+diff);
+  res.send(id + "|" + tienlai + "|" + diff);
 
 });
 router.get('/bill', function (req, res) {
@@ -315,6 +315,21 @@ router.get('/login', function (req, res) {
 
 })
 
+//quanli
+router.get('/quanli/nhanvien', function (req, res) {
+  if (req.session.login) {
+    //phan chia khu vuc role
+    role = req.session.role;
+    name = req.session.name;
+    if (role == 'admin') {
+      res.render('quanli/nhanvien',{title: name, acc_name: info.name, acc_avatar: info.avatar});
+    } else {
+      res.redirect('/login?action=first')
+    }
 
+  } else {
+    res.redirect('/login?action=first')
+  }
+});
 module.exports = router;
 

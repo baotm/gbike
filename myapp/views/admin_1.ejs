@@ -90,6 +90,9 @@
                 <li><a href=""><i class="fa fa-plus"></i> Thêm đồ thế</a>
 
                 </li>
+                <li><a href="/quanli/nhanvien"><i class="fa fa-user"></i> Nhân viên</a>
+
+                </li>
               </ul>
             </div>
 
@@ -221,6 +224,7 @@
               <th>Ngày Cầm</th>
               <th>Trạng thái</th>
               <th>Lãi xuất %</th>
+              <th>Ngày đã thế</th>
               <th>Tiền Lãi</th>
               <th>Tool</th>
             </tr>
@@ -387,15 +391,27 @@
         "data": function (d) {
           _date = d.ngaycam.split('/');
           var d1 = new Date();
+          d1.setMonth(d1.getMonth() + 1);
           var d2 = new Date(_date[2], (parseInt(_date[1])), _date[0])
           const diffTime = Math.abs(d2 - d1);
           const diffDays = (Math.ceil(diffTime / (1000 * 60 * 60 * 24)));
-          tienlai = diffDays * parseInt(d.laixuat) / 30 * parseInt(d.sotien) / 100;
-          tienlai = Math.round(tienlai);
-          if(tienlai<lamtron){
-            return formatNumber(lamtron.toString());
+          return diffDays;
+        }
+      },
+      {
+        "data": function (d) {
+          _date = d.ngaycam.split('/');
+          var d1 = new Date();
+          d1.setMonth(d1.getMonth() + 1);
+          var d2 = new Date(_date[2], (parseInt(_date[1])), _date[0])
+          const diffTime = Math.abs(d2 - d1);
+          const diffDays = (Math.ceil(diffTime / (1000 * 60 * 60 * 24)));
+          tienlai = diffDays * (parseInt(d.laixuat) / 30) * parseInt(d.sotien) / 100;
+          tienlai = Math.round(tienlai / 1000) * 1000;
+          if (tienlai < lamtron) {
+            return (formatNumber(lamtron.toString()));
           }
-          return formatNumber(tienlai.toString());
+          return (formatNumber(tienlai.toString()));
         }
       },
       {
