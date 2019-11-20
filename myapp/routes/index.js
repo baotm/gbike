@@ -19,17 +19,59 @@ router.get('/', function (req, res, next) {
     role = req.session.role;
     name = req.session.name;
     info = JSON.parse(req.session.acc)
-    query = "SELECT id FROM docam ORDER BY id DESC LIMIT 1;"
-    var connection = getConnect();
-    re = connection.query(query);
-    lastid = re[0].id;
-    connection.dispose();
-
     switch (role) {
       case 'admin': {
-        res.render('admin_1', { title: name, acc_name: info.name, acc_avatar: info.avatar })
+        //get notification
+        //
+
+        query = "SELECT * FROM `notification` "
+        var connection = getConnect();
+        noti = connection.query(query);
+        connection.dispose();
+
+        //tìm tất cả những noti mà account chưa xem
+        acc = info.name;
+        var _noti = new Array();
+        //đọc toàn bộ noti
+        for (i = 0; i < noti.length; i++) {
+          //tìm ra see
+          seeStr = noti[i].see;
+          if (seeStr == null) {
+            seeStr = "null";
+          }
+          if (seeStr.search(acc) >= 0) {
+            //co ket qua, khong hien thi
+          }
+          else {
+            //acc nay chua xem, hien thi
+            //lay ra account da sua tung string
+            noti[i].containt = (noti[i].containt).slice(0, 100) + " ...";
+            accEdit = noti[i].accEdit;
+
+            query = "SELECT * FROM `account` where user='"+accEdit+"'";
+
+            var connection = getConnect();
+            _accInfo = connection.query(query);
+            connection.dispose();
+          
+
+            accInfo = JSON.parse(_accInfo[0].info);
+            noti[i].pic = accInfo.avatar;
+
+            noti[i].date="1410119";
+            noti[i].timeDiff = "";
+
+            _noti.push(noti[i]);
+          }
+        }
+        res.render('admin_1', { title: name, acc_name: info.name, acc_avatar: info.avatar, _noti })
       } break;
       case 'sale': {
+        query = "SELECT * FROM docam ORDER BY id DESC LIMIT 1;"
+        var connection = getConnect();
+        re = connection.query(query);
+        lastid = re[0].id;
+        connection.dispose();
         res.render('nhanvien/index', { lastid: (parseInt(lastid) + 1), title: name, acc_name: info.name, acc_avatar: info.avatar })
       } break;
       case 'tech': {
@@ -250,7 +292,6 @@ router.post('/checklogin', function (req, res) {
     req.session.acc = _db.info;
     req.session.role = _db.role_id;
     req.session.name = _db.user;
-    req.session.acc = _db.info;
     res.redirect('/')
   } else {
     res.redirect('/login?action=loginfail')
@@ -322,7 +363,7 @@ router.get('/quanli/nhanvien', function (req, res) {
     role = req.session.role;
     name = req.session.name;
     if (role == 'admin') {
-      res.render('quanli/nhanvien',{title: name, acc_name: info.name, acc_avatar: info.avatar});
+      res.render('quanli/nhanvien', { title: name, acc_name: info.name, acc_avatar: info.avatar });
     } else {
       res.redirect('/login?action=first')
     }

@@ -52,6 +52,7 @@
 </head>
 
 <body class="nav-md">
+  <div id="div_username" style="display: none;"><%= title %></div>
   <div id="cover"></div>
   <div class="container body">
     <div class="main_container">
@@ -144,19 +145,26 @@
                   <span class="badge bg-green">6</span>
                 </a>
                 <ul id="menu1" class="dropdown-menu list-unstyled msg_list" role="menu">
+                  <% for (var i =0; i < _noti.length;  i++ ) { %>
+                    
                   <li>
                     <a>
-                      <span class="image"><img src="images/img.jpg" alt="Profile Image" /></span>
+                      <span class="image"><img src="<%= _noti[i].pic %>" alt="Profile Image"  style="width:30px;height:30px"  /></span>
                       <span>
-                        <span>John Smith</span>
+                        <span><%= _noti[i].accEdit  %> </span>
                         <span class="time">3 mins ago</span>
                       </span>
                       <span class="message">
-                        Film festivals used to be do-or-die moments for movie makers. They were where...
+                          <%=  _noti[i].containt %>
                       </span>
                     </a>
                   </li>
+                
+                  
+                  <% } %>
 
+
+                
                   <li>
                     <div class="text-center">
                       <a>
@@ -534,6 +542,7 @@
       tienno = $("#info_id").text();
       laixuat = $("#info_laixuat").text();
       ghichu = $("#info_ghichu").text();
+      
       //update notification
       queryNew = "UPDATE `docam` SET " +
         "`ten`= '" + name +
@@ -551,7 +560,7 @@
 
       });
       d = new Date();
-      _dateStr = d.getDate() + "\\" + d.getMonth() + "\\" + d.getFullYear()
+      _dateStr = d.getDate() + "\\" + d.getMonth() + "\\" + d.getFullYear()+"-"+d.getSeconds()+"\\"+d.getMinutes()+"\\"+d.getHours();
       _lastQuery = "UPDATE `docam` SET " +
         "`ten`= '" + last_query.name +
         "',`sodienthoai`='" + last_query.sodienthoai +
@@ -563,11 +572,12 @@
 
       noti_info = {
         containt: $("#log").text(),
-        date: _dateStr,
-        lido: $("#lido").text()
+        date:_dateStr,
+        lido: $("#lido").val(),
+        accEdit:$("#div_username").text()
       }
-      strQuery = "INSERT INTO `notification` (`id`, `containt`, `date`, `last_query`, `newquery`, `lido`)" +
-        " VALUES (NULL,'" + noti_info.containt + "','" + noti_info.date + "' , \"" + _lastQuery + "\", \"" + queryNew + "\", '" + noti_info.lido + "')";
+      strQuery = "INSERT INTO `notification` (`id`, `containt`, `date`, `last_query`, `newquery`, `lido`,`accEdit`)" +
+        " VALUES (NULL,'" + noti_info.containt + "','" + noti_info.date + "' , \"" + _lastQuery + "\", \"" + queryNew + "\", '" + noti_info.lido + "','"+noti_info.accEdit+"')";
       _url1 = "do_pawn_notifi_insert?query=" + encodeURI(strQuery);
       console.log(_url1);
       $.ajax({
