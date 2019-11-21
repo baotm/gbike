@@ -22,8 +22,6 @@ router.get('/', function (req, res, next) {
     switch (role) {
       case 'admin': {
         //get notification
-        //
-
         query = "SELECT * FROM `notification` "
         var connection = getConnect();
         noti = connection.query(query);
@@ -48,19 +46,34 @@ router.get('/', function (req, res, next) {
             noti[i].containt = (noti[i].containt).slice(0, 100) + " ...";
             accEdit = noti[i].accEdit;
 
-            query = "SELECT * FROM `account` where user='"+accEdit+"'";
+            query = "SELECT * FROM `account` where user='" + accEdit + "'";
 
             var connection = getConnect();
             _accInfo = connection.query(query);
             connection.dispose();
-          
+
 
             accInfo = JSON.parse(_accInfo[0].info);
             noti[i].pic = accInfo.avatar;
 
-            noti[i].date="1410119";
-            noti[i].timeDiff = "";
+            //20/10/2019-20:53:13
 
+            dateStr = (noti[i].date).split("-")[0];
+            _dateStr = dateStr.split('/');
+            timeStr = (noti[i].date).split("-")[1];
+            _timeStr = timeStr.split(":");
+
+            var day, month, year, sec, min, hour;
+            day = _dateStr[0]; month = _dateStr[1]; year = _dateStr[2];
+            sec = _timeStr[2]; min = _timeStr[1]; hour = _timeStr[0];
+
+
+            var d1 = new Date();
+            //new Date(year, month, day, hours, minutes, seconds, milliseconds)
+            var d2 = new Date(year, month, day, hour, min, sec, 0);
+
+            str = diff(d1, d2);
+            noti[i].timeDiff = str;
             _noti.push(noti[i]);
           }
         }
@@ -372,5 +385,20 @@ router.get('/quanli/nhanvien', function (req, res) {
     res.redirect('/login?action=first')
   }
 });
+
+function diff(start, end) {
+  
+  var diff = end.getTime() - start.getTime();
+  var hours = Math.floor(diff / 1000 / 60 / 60);
+  diff -= hours * 1000 * 60 * 60;
+  var minutes = Math.floor(diff / 1000 / 60);
+  var seconds = Math.floor(diff / 1000) - 120;
+
+  // If using time pickers with 24 hours format, add the below line get exact hours
+  if (hours < 0)
+    hours = hours + 24;
+
+  return "Cách đây "+(hours <= 9 ? "0" : "") + hours + "h :" + (minutes <= 9 ? "0" : "") + minutes + "p :" + (seconds <= 9 ? "0" : "") + seconds +"s";
+}
 module.exports = router;
 

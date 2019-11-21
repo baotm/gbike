@@ -142,7 +142,7 @@
               <li class="nav-item dropdown open" style="padding-left: 15px;">
                 <a href="javascript:;" class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="false">
                   <i class="fa fa-envelope-o"></i>
-                  <span class="badge bg-green">6</span>
+                  <span class="badge bg-green"><span><%= _noti.length  %></span></span>
                 </a>
                 <ul id="menu1" class="dropdown-menu list-unstyled msg_list" role="menu">
                   <% for (var i =0; i < _noti.length;  i++ ) { %>
@@ -152,7 +152,7 @@
                       <span class="image"><img src="<%= _noti[i].pic %>" alt="Profile Image"  style="width:30px;height:30px"  /></span>
                       <span>
                         <span><%= _noti[i].accEdit  %> </span>
-                        <span class="time">3 mins ago</span>
+                        <span class="time"><%= _noti[i].timeDiff  %></span>
                       </span>
                       <span class="message">
                           <%=  _noti[i].containt %>
