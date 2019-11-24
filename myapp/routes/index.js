@@ -4,12 +4,14 @@ var mysql = require('sync-mysql')
 
 /* GET home page. */
 function getConnect() {
+
   var connection = new mysql({
-    host: "37.59.55.185",
-    user: "VSJKeJDSNR",
-    password: "blWm7N1F8T",
-    database: 'VSJKeJDSNR'
+    host: "103.130.216.99",
+    user: "gbikevie_baotm",
+    password: "anhyeu12",
+    database: 'gbikevie_gbikepawn'
   });
+
   return connection;
 }
 
