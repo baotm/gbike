@@ -43,7 +43,7 @@ router.get('/', function (req, res, next) {
           else {
             //acc nay chua xem, hien thi
             //lay ra account da sua tung string
-            noti[i].containt = (noti[i].containt).slice(0, 100) + " ...";
+            noti[i].containt = (noti[i].containt).slice(0, 60) + " ...";
             accEdit = noti[i].accEdit;
 
             query = "SELECT * FROM `account` where user='" + accEdit + "'";
@@ -97,8 +97,6 @@ router.get('/', function (req, res, next) {
 });
 router.get('/do_pawn_update', function (req, res) {
   strQuery = decodeURI(req.query.query);
-  console.log("------------------")
-  console.log(strQuery);
   var connection = getConnect();
   re = connection.query((strQuery));
   connection.dispose();
@@ -375,8 +373,19 @@ router.get('/quanli/nhanvien', function (req, res) {
     //phan chia khu vuc role
     role = req.session.role;
     name = req.session.name;
+    var connection = getConnect();
+    result = connection.query('SELECT * FROM `account`');
+    connection.dispose();
+    var acc = result;
+    var acc_info = new Array();
+    for(i = 0;i<acc.length;i++){
+      obj = JSON.parse(acc[i].info)
+      acc_info.push(obj);
+    } 
+
+    //info all
     if (role == 'admin') {
-      res.render('quanli/nhanvien', { title: name, acc_name: info.name, acc_avatar: info.avatar });
+      res.render('quanli/nhanvien', { title: name, acc_name: info.name, acc_avatar: info.avatar, account: acc,acc_info:acc_info });
     } else {
       res.redirect('/login?action=first')
     }
@@ -386,19 +395,48 @@ router.get('/quanli/nhanvien', function (req, res) {
   }
 });
 
+router.get('profile', function (req, res) {
+  if (req.session.login) {
+    //phan chia khu vuc role
+    role = req.session.role;
+    name = req.session.name;
+    id = req.query.id;
+    var connection = getConnect();
+    result = connection.query('SELECT * FROM account WHERE id=' + id);
+    connection.dispose();
+    var acc = result;
+    var acc_info = new Array();
+    for(i = 0;i<acc.length;i++){
+      obj = JSON.parse(acc[i].info)
+      acc_info.push(obj);
+    } 
+
+    //info all
+    if (role == 'admin') {
+      res.render('profile', { title: name, acc_name: info.name, acc_avatar: info.avatar, account: acc,acc_info:acc_info });
+    } else {
+      res.redirect('/login?action=first')
+    }
+
+  } else {
+    res.redirect('/login?action=first')
+  }
+});
 function diff(start, end) {
-  
+
   var diff = end.getTime() - start.getTime();
   var hours = Math.floor(diff / 1000 / 60 / 60);
   diff -= hours * 1000 * 60 * 60;
   var minutes = Math.floor(diff / 1000 / 60);
   var seconds = Math.floor(diff / 1000) - 120;
 
+  const diffTime = Math.abs(start - end);
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
   // If using time pickers with 24 hours format, add the below line get exact hours
   if (hours < 0)
     hours = hours + 24;
 
-  return "Cách đây "+(hours <= 9 ? "0" : "") + hours + "h :" + (minutes <= 9 ? "0" : "") + minutes + "p :" + (seconds <= 9 ? "0" : "") + seconds +"s";
+  return "Cách đây " + diffDays + " ngày, " + (hours <= 9 ? "0" : "") + hours + "h :" + (minutes <= 9 ? "0" : "") + minutes + "p :" + (seconds <= 9 ? "0" : "") + seconds + "s";
 }
 module.exports = router;
 
