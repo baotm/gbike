@@ -2,16 +2,7 @@ var express = require('express');
 var router = express.Router();
 var mysql = require('sync-mysql')
 
-
-//admin router {}
-
-
-//user router{}
-
-
-//function stuff
-//DB base tool
-
+/* GET home page. */
 function getConnect() {
   var connection = new mysql({
     host: "103.130.216.99",
@@ -21,162 +12,100 @@ function getConnect() {
   });
   return connection;
 }
-function db_query(str) {
-  var connection = getConnect();
-  result = connection.query(str);
-  connection.dispose();
-  return result;
-}
-function db_get_noti(role) {
-  let noti = new Array();
-  switch (role) {
-    case 'admin': {
-      // noti for admin
-      queryStr = "SELECT * FROM `notification` "
-      result = db_query(queryStr);
-    } break;
-    default: {
-      // noti for user
-      queryStr = "SELECT * FROM `user_notification` "
-      result = db_query(queryStr);
-    } break;
-  }
-  return noti;
-}
+//admin router {}
 
-//page tool
-function checkLogin(req) {
-  //check login ? {check if login true => return true, else return false, }
-  if (req.session.login) {
-    return true;
-  } else {
-    return false;
-  }
-}
 
-function checkRole(req, res) {
-  role = req.session.role;
-  switch (role) {
-    case 'admin': {
-      view_admin(req, res);
-    } break;
-    case 'sale': {
-      view_sale(req, res)
-    } break;
-    case 'tech': {
-      view_tech(req, res)
-    } break;
-  }
-}
-//view page
-function view_admin(req, res) {
-  role = 'admin';
-  //info notification
-  noti = db_get_noti(role);
+//user router{}
 
-  res.render('admin')
 
-}
-function view_sale(req, res) {
-  res.send('sale page')
-  noti = db_get_noti('user');
-}
-function view_tech(req, res) {
-  res.send('tech page')
-  noti = db_get_noti('user');
+//function stuff
+function checkLogin(){
+  
 }
 
 
 router.get('/', function (req, res, next) {
-  //check login
-  if (checkLogin(req)) {
-    checkRole(req, res);
+  if (req.session.login) {
+    //phan chia khu vuc role
+    role = req.session.role;
+    name = req.session.name;
+    info = JSON.parse(req.session.acc)
+    switch (role) {
+      case 'admin': {
+        //get notification
+        query = "SELECT * FROM `notification` "
+        var connection = getConnect();
+        noti = connection.query(query);
+        connection.dispose();
+
+        //tìm tất cả những noti mà account chưa xem
+        acc = info.name;
+        var _noti = new Array();
+        //đọc toàn bộ noti
+        for (i = 0; i < noti.length; i++) {
+          //tìm ra see
+          seeStr = noti[i].see;
+          if (seeStr == null) {
+            seeStr = "null";
+          }
+          if (seeStr.search(acc) >= 0) {
+            //co ket qua, khong hien thi
+          }
+          else {
+            //acc nay chua xem, hien thi
+            //lay ra account da sua tung string
+            noti[i].containt = (noti[i].containt).slice(0, 60) + " ...";
+            accEdit = noti[i].accEdit;
+
+            query = "SELECT * FROM `account` where user='" + accEdit + "'";
+
+            var connection = getConnect();
+            _accInfo = connection.query(query);
+            connection.dispose();
+
+
+            accInfo = JSON.parse(_accInfo[0].info);
+            noti[i].pic = accInfo.avatar;
+
+            //20/10/2019-20:53:13
+
+            dateStr = (noti[i].date).split("-")[0];
+            _dateStr = dateStr.split('/');
+            timeStr = (noti[i].date).split("-")[1];
+            _timeStr = timeStr.split(":");
+
+            var day, month, year, sec, min, hour;
+            day = _dateStr[0]; month = _dateStr[1]; year = _dateStr[2];
+            sec = _timeStr[2]; min = _timeStr[1]; hour = _timeStr[0];
+
+
+            var d1 = new Date();
+            //new Date(year, month, day, hours, minutes, seconds, milliseconds)
+            var d2 = new Date(year, month, day, hour, min, sec, 0);
+
+            str = diff(d1, d2);
+            noti[i].timeDiff = str;
+            _noti.push(noti[i]);
+          }
+        }
+        res.render('admin_1', { title: name, acc_name: info.name, acc_avatar: info.avatar, _noti })
+      } break;
+      case 'sale': {
+        query = "SELECT * FROM docam ORDER BY id DESC LIMIT 1;"
+        var connection = getConnect();
+        re = connection.query(query);
+        lastid = re[0].id;
+        connection.dispose();
+        res.render('nhanvien/index', { lastid: (parseInt(lastid) + 1), title: name, acc_name: info.name, acc_avatar: info.avatar })
+      } break;
+      case 'tech': {
+        res.render('tech', { title: name })
+      } break;
+    }
   } else {
     res.redirect('/login?action=first')
   }
 });
-// router.get('/', function (req, res, next) {
-//   if (req.session.login) {
-//     //phan chia khu vuc role
-//     role = req.session.role;
-//     name = req.session.name;
-//     info = JSON.parse(req.session.acc)
-//     switch (role) {
-//       case 'admin': {
-//         //get notification
-//         query = "SELECT * FROM `notification` "
-//         var connection = getConnect();
-//         noti = connection.query(query);
-//         connection.dispose();
-
-//         //tìm tất cả những noti mà account chưa xem
-//         acc = info.name;
-//         var _noti = new Array();
-//         //đọc toàn bộ noti
-//         for (i = 0; i < noti.length; i++) {
-//           //tìm ra see
-//           seeStr = noti[i].see;
-//           if (seeStr == null) {
-//             seeStr = "null";
-//           }
-//           if (seeStr.search(acc) >= 0) {
-//             //co ket qua, khong hien thi
-//           }
-//           else {
-//             //acc nay chua xem, hien thi
-//             //lay ra account da sua tung string
-//             noti[i].containt = (noti[i].containt).slice(0, 60) + " ...";
-//             accEdit = noti[i].accEdit;
-
-//             query = "SELECT * FROM `account` where user='" + accEdit + "'";
-
-//             var connection = getConnect();
-//             _accInfo = connection.query(query);
-//             connection.dispose();
-
-
-//             accInfo = JSON.parse(_accInfo[0].info);
-//             noti[i].pic = accInfo.avatar;
-
-//             //20/10/2019-20:53:13
-
-//             dateStr = (noti[i].date).split("-")[0];
-//             _dateStr = dateStr.split('/');
-//             timeStr = (noti[i].date).split("-")[1];
-//             _timeStr = timeStr.split(":");
-
-//             var day, month, year, sec, min, hour;
-//             day = _dateStr[0]; month = _dateStr[1]; year = _dateStr[2];
-//             sec = _timeStr[2]; min = _timeStr[1]; hour = _timeStr[0];
-
-
-//             var d1 = new Date();
-//             //new Date(year, month, day, hours, minutes, seconds, milliseconds)
-//             var d2 = new Date(year, month, day, hour, min, sec, 0);
-
-//             str = diff(d1, d2);
-//             noti[i].timeDiff = str;
-//             _noti.push(noti[i]);
-//           }
-//         }
-//         res.render('admin_1', { title: name, acc_name: info.name, acc_avatar: info.avatar, _noti })
-//       } break;
-//       case 'sale': {
-//         query = "SELECT * FROM docam ORDER BY id DESC LIMIT 1;"
-//         var connection = getConnect();
-//         re = connection.query(query);
-//         lastid = re[0].id;
-//         connection.dispose();
-//         res.render('nhanvien/index', { lastid: (parseInt(lastid) + 1), title: name, acc_name: info.name, acc_avatar: info.avatar })
-//       } break;
-//       case 'tech': {
-//         res.render('tech', { title: name })
-//       } break;
-//     }
-//   } else {
-//     res.redirect('/login?action=first')
-//   }
-// });
 router.get('/do_pawn_update', function (req, res) {
   strQuery = decodeURI(req.query.query);
   var connection = getConnect();
@@ -460,14 +389,14 @@ router.get('/quanli/nhanvien', function (req, res) {
     connection.dispose();
     var acc = result;
     var acc_info = new Array();
-    for (i = 0; i < acc.length; i++) {
+    for(i = 0;i<acc.length;i++){
       obj = JSON.parse(acc[i].info)
       acc_info.push(obj);
-    }
+    } 
 
     //info all
     if (role == 'admin') {
-      res.render('quanli/nhanvien', { title: name, acc_name: info.name, acc_avatar: info.avatar, account: acc, acc_info: acc_info });
+      res.render('quanli/nhanvien', { title: name, acc_name: info.name, acc_avatar: info.avatar, account: acc,acc_info:acc_info });
     } else {
       res.redirect('/login?action=first')
     }
@@ -488,14 +417,14 @@ router.get('profile', function (req, res) {
     connection.dispose();
     var acc = result;
     var acc_info = new Array();
-    for (i = 0; i < acc.length; i++) {
+    for(i = 0;i<acc.length;i++){
       obj = JSON.parse(acc[i].info)
       acc_info.push(obj);
-    }
+    } 
 
     //info all
     if (role == 'admin') {
-      res.render('profile', { title: name, acc_name: info.name, acc_avatar: info.avatar, account: acc, acc_info: acc_info });
+      res.render('profile', { title: name, acc_name: info.name, acc_avatar: info.avatar, account: acc,acc_info:acc_info });
     } else {
       res.redirect('/login?action=first')
     }
