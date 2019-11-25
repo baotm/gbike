@@ -491,6 +491,26 @@ router.get('/themdothe', function (req, res) {
     res.redirect('/login?action=first')
   }
 })
+router.get('/quy',function(req,res){
+
+  if (checkLogin(req)) {
+    if (checkAdminRole(req)) {
+      res.render('quy', { title: name, acc_name: info.name, acc_avatar: info.avatar, account: acc });
+    }
+  } else {
+    res.redirect('/')
+  }
+});
+router.get('/thongke',function(req,res){
+
+  if (checkLogin(req)) {
+    if (checkAdminRole(req)) {
+      res.render('thongke', { title: name, acc_name: info.name, acc_avatar: info.avatar });
+    }
+  } else {
+    res.redirect('/')
+  }
+});
 router.get('/profile', function (req, res) {
 
   if (checkLogin(req)) {
