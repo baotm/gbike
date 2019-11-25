@@ -94,7 +94,7 @@ function init_sidebar() {
 
 		setContentHeight();
 
-		$('.dataTable').each(function () { $(this).dataTable().fnDraw(); });
+	
 	});
 	$MENU_TOGGLE.trigger("click");
 
