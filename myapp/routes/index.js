@@ -72,9 +72,10 @@ function checkRole(req, res) {
 function view_admin(req, res) {
   role = 'admin';
   //info notification
-  noti = db_get_noti(role);
-
-  res.render('admin')
+  _noti = db_get_noti(role);
+  name = req.session.name;
+  info = JSON.parse(req.session.info)
+  res.render('index', { title: name, acc_name: info.name, acc_avatar: info.avatar, _noti })
 
 }
 function view_sale(req, res) {
@@ -385,6 +386,7 @@ router.post('/checklogin', function (req, res) {
     req.session.acc = _db.info;
     req.session.role = _db.role_id;
     req.session.name = _db.user;
+    req.session.info = _db.info;
     res.redirect('/')
   } else {
     res.redirect('/login?action=loginfail')
