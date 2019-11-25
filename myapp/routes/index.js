@@ -45,10 +45,24 @@ function db_get_noti(role) {
   return noti;
 }
 
+function getAccount(user, pass) {
+  var connection = getConnect();
+  res = connection.query('SELECT * FROM account WHERE user="' + user + '" and password="' + pass + '"');
+  connection.dispose();
+  return res;
+}
 //page tool
 function checkLogin(req) {
   //check login ? {check if login true => return true, else return false, }
   if (req.session.login) {
+    return true;
+  } else {
+    return false;
+  }
+}
+function checkAdminRole(req) {
+  role = req.session.role;
+  if (role == 'admin') {
     return true;
   } else {
     return false;
@@ -78,7 +92,7 @@ function view_admin(req, res) {
   name = req.session.name;
   _noti = noti_filter(_noti, name);
   info = JSON.parse(req.session.info)
-  res.render('index', { title: name, acc_name: info.name, acc_avatar: info.avatar, _noti,role:role })
+  res.render('index', { title: name, acc_name: info.name, acc_avatar: info.avatar, _noti, role: role })
 
 }
 function noti_filter(noti, acc) {
@@ -140,7 +154,7 @@ function view_sale(req, res) {
   name = req.session.name;
   _noti = noti_filter(_noti, name);
   info = JSON.parse(req.session.info)
-  res.render('index', { title: name, acc_name: info.name, acc_avatar: info.avatar, _noti,role:role })
+  res.render('index', { title: name, acc_name: info.name, acc_avatar: info.avatar, _noti, role: role })
 }
 function view_tech(req, res) {
   role = 'user';
@@ -285,7 +299,7 @@ router.get('/pawn_submit', function (req, res) {
   var connection = getConnect();
   re = connection.query(strQuery);
   connection.dispose();
-  res.send('200')
+  res.redirect('/')
 
 });
 router.get("/do_pawn_notifi_insert", function (req, res) {
@@ -378,12 +392,6 @@ router.post('/checklogin', function (req, res) {
   }
 
 });
-function getAccount(user, pass) {
-  var connection = getConnect();
-  res = connection.query('SELECT * FROM account WHERE user="' + user + '" and password="' + pass + '"');
-  connection.dispose();
-  return res;
-}
 router.get('/ajax_pawn_item_get', function (req, res) {
   id = req.query.id;
   var connection = getConnect();
@@ -403,11 +411,8 @@ router.get('/ajax_pawn_item_get_all', function (req, res) {
   res.send(_re);
 })
 
-
-
 router.get('/login', function (req, res) {
   act = req.query.action;
-
   if (req.session.login) {
     res.render('login', {
       msg: 'Bạn Đã đăng nhập - vui lòng đăng xuất'
@@ -425,10 +430,7 @@ router.get('/login', function (req, res) {
           msg: 'Sai tên đăng nhập hoặc mật khẩu'
         })
       } break;
-        ;
-
     }
-
   } else {
     res.render('login?action=first')
   }
@@ -436,8 +438,23 @@ router.get('/login', function (req, res) {
 
 })
 
-//quanli
-router.get('/quanli/nhanvien', function (req, res) {
+router.get('/nhanvien', function (req, res) {
+  //chỉ có admin mới xem được
+  if (checkLogin(req)) {
+    if (checkAdminRole(req)) {
+      result = db_query('SELECT * FROM `account`');
+      var acc = result;
+      var acc_info = new Array();
+      for (i = 0; i < acc.length; i++) {
+        obj = JSON.parse(acc[i].info)
+        acc_info.push(obj);
+      }
+      res.render('nhanvien', { title: name, acc_name: info.name, acc_avatar: info.avatar, account: acc, acc_info: acc_info });
+    }
+  } else {
+    res.redirect('/')
+  }
+
   if (req.session.login) {
     //phan chia khu vuc role
     role = req.session.role;
@@ -464,32 +481,35 @@ router.get('/quanli/nhanvien', function (req, res) {
   }
 });
 
-router.get('profile', function (req, res) {
-  if (req.session.login) {
-    //phan chia khu vuc role
-    role = req.session.role;
-    name = req.session.name;
-    id = req.query.id;
-    var connection = getConnect();
-    result = connection.query('SELECT * FROM account WHERE id=' + id);
-    connection.dispose();
-    var acc = result;
-    var acc_info = new Array();
-    for (i = 0; i < acc.length; i++) {
-      obj = JSON.parse(acc[i].info)
-      acc_info.push(obj);
-    }
-
-    //info all
-    if (role == 'admin') {
-      res.render('profile', { title: name, acc_name: info.name, acc_avatar: info.avatar, account: acc, acc_info: acc_info });
-    } else {
-      res.redirect('/login?action=first')
-    }
-
+router.get('/themdothe', function (req, res) {
+  if (checkLogin(req)) {
+    query = "SELECT * FROM docam ORDER BY id DESC LIMIT 1;"
+    re = db_query(query)
+    lastid = re[0].id;
+    res.render('themdothe', { lastid: (parseInt(lastid) + 1), title: name, acc_name: info.name, acc_avatar: info.avatar })
   } else {
     res.redirect('/login?action=first')
   }
+})
+router.get('/profile', function (req, res) {
+
+  if (checkLogin(req)) {
+    if (checkAdminRole(req)) {
+      
+      id = req.query.id;
+      result = db_query('SELECT * FROM account WHERE id=' + id);
+      var acc = result;
+      var acc_info = new Array();
+      for (i = 0; i < acc.length; i++) {
+        obj = JSON.parse(acc[i].info)
+        acc_info.push(obj);
+      }
+      res.render('profile', { title: name, acc_name: info.name, acc_avatar: info.avatar, account: acc, acc_info: acc_info });
+    }
+  } else {
+    res.redirect('/')
+  }
+  
 });
 function diff(start, end) {
 

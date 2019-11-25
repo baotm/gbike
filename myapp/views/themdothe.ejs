@@ -1,0 +1,506 @@
+<% include view_tong/top %>
+<style>
+        .editor_pic {
+            cursor: pointer;
+            font-size: 20px;
+            color: red;
+        }
+
+        .modal-body input[type=text] {
+            display: none;
+        }
+
+        iframe {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+    </style>
+<div class="row">
+        <div class="col-md-6 ">
+            <div class="x_panel">
+                <div class="x_title">
+                    <h2>Thông tin đồ thế<small> Hợp đồng số <span id="id_hopdong">
+                                <%= lastid %></span></small></h2>
+                    <ul class="nav navbar-right panel_toolbox">
+                        <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                        </li>
+
+                        <li><a class="close-link"><i class="fa fa-close"></i></a>
+                        </li>
+                    </ul>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="x_content">
+                    <br />
+                    <form method="GET" action="pawn_submit" class="form-label-left input_mask"
+                        autocomplete="off">
+
+                        <div class="col-md-6 col-sm-6  form-group has-feedback">
+
+                            <input type="text" name="name" class="form-control has-feedback-left"
+                                id="ipt_name" required placeholder="Họ tên">
+                            <span class="fa fa-user form-control-feedback left" aria-hidden="true"></span>
+                        </div>
+
+                        <div class="col-md-6 col-sm-6  form-group has-feedback">
+                            <input required id="ipt_phone" pattern="0[0-9]{9,11}" type="text" name="phone"
+                                class="form-control" placeholder="Số Điện thoại"
+                                title="Nhập đúng số điện thoại">
+                            <span class="fa fa-phone form-control-feedback right" aria-hidden="true"></span>
+                        </div>
+
+                        <div class="col-md-6 col-sm-6  form-group has-feedback">
+                            <input data-type="currency" required type="text" name="money"
+                                class="form-control has-feedback-left" id="ipt_money" placeholder="Số tiền">
+                            <span class="fa fa-money form-control-feedback left" aria-hidden="true"></span>
+                        </div>
+                        <div class="col-md-6 col-sm-6  form-group has-feedback">
+                            <input required type="text" value="<%= acc_name %>" name="sale"
+                                class="form-control has-feedback-left" id="ipt_sale" placeholder="Nhân viên"
+                                readonly="readonly">
+                            <span class="fa fa-user form-control-feedback right" aria-hidden="true"></span>
+                        </div>
+                        <div class="col-md-6 col-sm-6  form-group has-feedback">
+                            <input autocomplete="false" type="text" name="cmnd"
+                                class="form-control has-feedback-left" id="ipt_cmnd" placeholder="CMND"
+                                pattern="[0-9]{9}" title="Nhập đúng số cmnd">
+                            <span class="fa fa-credit-card form-control-feedback left"
+                                aria-hidden="true"></span>
+                        </div>
+                        <div class="col-md-6 col-sm-6  form-group has-feedback">
+                            <input  type="text" name="cmnd_date"
+                                class="form-control has-feedback-left" id="ipt_cmnd_date"
+                                placeholder="Ngày cấp">
+                            <span class="fa fa-calendar form-control-feedback right"
+                                aria-hidden="true"></span>
+                        </div>
+
+
+                        <div class="col-md-6 col-sm-6  form-group has-feedback">
+                            <label>Ngày thế</label>
+                            <div class="form-group">
+                                <div class='input-group date' id='myDatepicker'>
+                                    <input type='text' onchange="changeDate()" id="ipt_date" name="ngaythe"
+                                        class="form-control" />
+                                    <span class="input-group-addon">
+                                        <span class="fa fa-calendar"></span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-sm-6  form-group has-feedback">
+                            <label>Ngày tới hạn</label>
+                            <input type="text" id="ngaytoihan" name="ngaytoihan"
+                                class="form-control has-feedback-left" placeholder="" readonly>
+                        </div>
+
+
+
+
+
+
+                </div>
+                <div class="form-group row">
+                    <div class="form-group row" id="pawn_item_detail">
+                        <label class="col-form-label col-md-3 col-sm-3 "><label for="heard">Món *:</label>
+                            <select id="item" name="mondo" class="form-control" required>
+                                <option selected value="xemay">Xe máy</option>
+                                <option value="xedien">Xe điện</option>
+                                <option value="dienthoai">Điện thoại</option>
+                                <option value="khac">Khác</option>
+                            </select></label>
+                        <div class="col-md-9 col-sm-9">
+                            <div class="col-md-6 col-sm-6  form-group has-feedback">
+                                <div id="select_item">
+                                    <input title="Điền đúng tên xe" list="xe_datalist" type="text"
+                                        name="ipt_item_name" class="form-control has-feedback-left"
+                                        id="ipt_item_name" onchange="nameChange(this)" placeholder="Nhãn hiệu">
+                                </div>
+
+                                <span class="fa fa-envelope form-control-feedback left"
+                                    aria-hidden="true"></span>
+                                <datalist id="xe_datalist">
+                                    <option value="Exciter">
+                                    <option value="Cub">
+                                    <option value="Wave">
+                                    <option value="Honda Vision">
+                                    <option value="Xe phổ thông 10tr">
+                                    <option value="Xe ga 30tr">
+                                    <option value="Xe cao cấp 50tr">
+                                </datalist>
+                                <datalist id="dienthoai_datalist">
+                                    <option value="Apple">
+                                    <option value="Samsung">
+                                    <option value="dưới 3tr">
+                                    <option value="dưới 8tr">
+                                    <option value="trên 10tr">
+                                </datalist>
+                                <datalist id="xedien_datalist">
+                                    <option value="dưới 8tr">
+                                    <option value="trên 8tr">
+                                    <option value="cao cấp">
+                                </datalist>
+
+                            </div>
+                            <div class="col-md-6 col-sm-6  form-group has-feedback">
+                                <input list="color_datalist" type="text" name="ipt_item_color"
+                                    class="form-control has-feedback-left" id="ipt_item_color"
+                                    placeholder="Màu">
+                                <datalist id="color_datalist">
+                                    <option value="Xanh lá">
+                                    <option value="Đỏ">
+                                    <option value="Vàng">
+                                    <option value="Xanh biển">
+                                    <option value="Đen">
+                                    <option value="Xám">
+                                    <option value="Cam">
+                                    <option value="Hồng">
+                                    <option value="phổ thông">
+
+                                </datalist>
+                                <span class="fa fa-envelope form-control-feedback left"
+                                    aria-hidden="true"></span>
+                            </div>
+                            <div class="col-md-6 col-sm-6  form-group has-feedback">
+                                <input required type="text" name="ipt_item_cavet"
+                                    class="form-control has-feedback-left" id="ipt_item_cavet"
+                                    placeholder="Biển số">
+                                <span class="fa fa-envelope form-control-feedback left"
+                                    aria-hidden="true"></span>
+                            </div>
+                            <div class="col-md-6 col-sm-6  form-group has-feedback">
+                                <input name="ipt_url" id="ipt_url" class="form-control has-feedback-left Disabled">
+                                <span class="fa fa-wrench form-control-feedback left"
+                                    aria-hidden="true"></span>
+                            </div>
+
+
+                            <div class="col-md-6 col-sm-6">
+                                <label>Ảnh</label>
+                                <div id="results"
+                                    style="width: 320px;height: 240px;border: 1px solid black;">
+
+                                </div>
+                                <br />
+                                <div id="my_camera"></div>
+                                <input type="hidden" name="ipt_item_name_1" id="ipt_item_name_1"/>
+                            </div>
+
+                        </div>
+                        <div> <input type="button" class="btn btn-primary" value="Chụp"
+                                style="position: absolute;width:20%;margin-left: -97%;margin-top:40%"
+                                onClick="take_snapshot()"></div>
+                        <div> <input disabled type="button" id="btn_xacnhananh" class="btn btn-primary"
+                                value="xác nhận ảnh"
+                                style="position: absolute;width:25%;margin-left: -99%;margin-top:50%"
+                                onClick="uploadPic()"></div>
+                    </div>
+
+
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-md-12 col-sm-12  form-group has-feedback">
+                        <label for="heard">Lãi xuất (%) :</label>
+                        <select id="ipt_laixuat" name="ipt_laixuat" class="form-control" required>
+                            <option selected value="3">3</option>
+                            <option value="3.5">3.5</option>
+                            <option value="4">4</option>
+                            <option value="4.5">4.5</option>
+                            <option value="5">5</option>
+                            <option value="5.5">5.5</option>
+                            <option value="6">6</option>
+                        </select></label>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="control-label col-md-3 col-sm-3 ">Ghi Chú</label>
+                    <div class="col-md-9 col-sm-9 ">
+                        <textarea id="ipt_ghichu" name="ghichu" class="resizable_textarea form-control"
+                            placeholder=""></textarea>
+                    </div>
+                </div>
+
+
+
+
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <button class="btn btn-primary" disabled type="button" id="btn_xemtruoc"
+                        onclick="xemtruoc();">Xem
+                        trước</button>
+                    <button class="btn btn-primary" type="reset">Reset</button>
+                    <button id="btn_submit" type="submit" class="btn btn-success" disabled>Đồng ý</button>
+                </div>
+            </div>
+
+            </form>
+        </div>
+        <div class="col-md-6">
+            <iframe class="zoom" id="iframe_xemtruoc" src=""></iframe>
+        </div>
+
+    </div>
+
+    <script src="js/webcam.min.js"></script>
+
+    <script>
+
+        $(document).ready(function () {
+            $('#myDatepicker').datetimepicker({
+                format: 'DD/MM/YYYY',
+                defaultDate: new Date()
+            }).on('onload', function () {
+                //get date
+                _date = $("#ipt_date").val().split('/');
+                var date = new Date(_date[2], _date[1], _date[0]);
+                date.setMonth(date.getMonth() + 3)
+                date_end_count = getDayFormat(date);
+                $('#ngaytoihan').val(date_end_count)
+            }).on('dp.change', function (e) {
+                _date = $("#ipt_date").val().split('/');
+                var date = new Date(_date[2], _date[1], _date[0]);
+                date.setMonth(date.getMonth() + 3)
+                date_end_count = getDayFormat(date);
+                $('#ngaytoihan').val(date_end_count)
+            })
+            $("#myDatepicker").trigger('onload');
+
+            $("#item").change(function () {
+                _val = this.value;
+                console.log(_val)
+                switch (_val) {
+                    case "xemay": {
+                        $("#ipt_item_cavet").prop('disabled', false)
+                        var myvar = '<input title="Điền đúng tên" list="xe_datalist" type="text"' +
+                            '                        name="ipt_item_name" class="form-control has-feedback-left"' +
+                            '                        id="ipt_item_name" placeholder="Nhãn hiệu" onchange="nameChange()">';
+                        document.querySelector("#select_item").innerHTML = myvar;
+                    } break;
+                    case "xedien": {
+                        $("#ipt_item_cavet").prop('disabled', true)
+                        var myvar = '<input title="Điền đúng tên" list="xedien_datalist" type="text"' +
+                            '                        name="ipt_item_name" class="form-control has-feedback-left"' +
+                            '                        id="ipt_item_name" placeholder="Nhãn hiệu" onchange="nameChange()">';
+                        document.querySelector("#select_item").innerHTML = myvar;
+                    } break;
+                    case "dienthoai": {
+                        $("#ipt_item_cavet").prop('disabled', true)
+                        var myvar = '<input title="Điền đúng tên" list="dienthoai_datalist" type="text"' +
+                            '                        name="ipt_item_name" class="form-control has-feedback-left"' +
+                            '                        id="ipt_item_name" placeholder="Nhãn hiệu" onchange="nameChange()">';
+                        document.querySelector("#select_item").innerHTML = myvar;
+                    } break;
+                    case "khac": {
+                        $("#ipt_item_cavet").prop('disabled', true)
+                        var myvar = '<input title="Điền đúng tên" type="text"' +
+                            '                        name="ipt_item_name" class="form-control has-feedback-left"' +
+                            '                        id="ipt_item_name" placeholder="Nhãn hiệu" onchange="nameChange()">';
+                        document.querySelector("#select_item").innerHTML = myvar;
+                    } break;
+                    default: {
+                        $("#ipt_item_cavet").prop('disabled', true)
+                    } break;
+                }
+            });
+
+        });
+        function nameChange(item){
+           _val = item.value;
+           $("#ipt_item_name_1").val(_val);
+        }
+
+    </script>
+    <script language="JavaScript">
+        Webcam.set({
+            width: 320,
+            height: 240,
+            image_format: 'jpeg',
+            jpeg_quality: 90,
+
+        });
+
+        Webcam.attach('#my_camera');
+        function getDayFormat(date) {
+            var today = date;
+            var dd = today.getDate();
+            var mm = today.getMonth(); //January is 0!
+            var yyyy = today.getFullYear();
+            if (dd < 10) {
+                dd = '0' + dd;
+            }
+            if (mm < 10) {
+                mm = '0' + mm;
+            }
+            var today = dd + '/' + mm + '/' + yyyy;
+            return today;
+        }
+        function take_snapshot() {
+            Webcam.snap(function (data_uri) {
+                document.getElementById('results').innerHTML =
+                    '<img id="img_base64" src="' + data_uri + '"/>';
+            });
+            $("#btn_xacnhananh").prop('disabled', false);
+        }
+        url = "";
+        function xemtruoc() {
+            //check validate
+            if (document.querySelector("#ipt_name").checkValidity() && document.querySelector("#ipt_phone").checkValidity() && document.querySelector("#ipt_money").checkValidity()) {
+                $("#btn_submit").prop('disabled', false);
+
+            } else {
+                alert('Vui lòng điển đủ các thông tin')
+                return;
+            }
+            name = document.querySelector("#ipt_name").value;
+            phone = document.querySelector("#ipt_phone").value;
+            money = document.querySelector("#ipt_money").value;
+            sale = document.querySelector("#ipt_sale").value;
+            cmnd = document.querySelector("#ipt_cmnd").value;
+            cmnd_date = document.querySelector("#ipt_cmnd_date").value;
+            date_p = document.querySelector("#ipt_date").value;
+            item_name = document.querySelector("#ipt_item_name").value;
+            item_color = document.querySelector("#ipt_item_color").value;
+            laixuat = $("#ipt_laixuat :selected").text();
+            ghichu = document.querySelector("#ipt_ghichu").value;
+            item = document.querySelector("#item").value;
+            cavet = document.querySelector("#ipt_item_cavet").value;
+
+            str = "bill?name=" + name + "&";
+            str += "phone=" + phone + "&";
+            str += "money=" + money + "&";
+            str += "sale=" + sale + "&";
+            str += "cmnd=" + cmnd + "&";
+            str += "cmnd_date=" + cmnd_date + "&";
+            str += "date_p=" + date_p + "&";
+            str += "item_name=" + item_name + "&";
+            str += "item_color=" + item_color + "&";
+            str += "laixuat=" + laixuat + "&";
+            str += "ghichu=" + ghichu + "&";
+            str += "cavet=" + cavet + "&";
+            str += "url=" + url.replace(/%20/g, "") + "&";
+            str += "item=" + item;
+            document.querySelector("#iframe_xemtruoc").src = str;
+
+        }
+
+        function uploadPic() {
+            base64image = document.querySelector("#img_base64").src;
+            id = document.querySelector("#id_hopdong").innerHTML;
+            date = document.querySelector("#ipt_date").value;
+
+            date = date.replace(/\//g, "");
+
+
+            nameOfpicture = id + "-" + date;
+            nameOfpicture = decodeURI(nameOfpicture);
+            nameOfpicture = nameOfpicture.trim();
+
+            $.ajax({
+                url: '/upload_picture',
+                type: 'POST',
+                data: {
+                    img: base64image,
+                    name: nameOfpicture
+                },
+                success: function (data) {
+                    url = data;
+                    document.getElementById("btn_xemtruoc").disabled = false;
+                    $("#ipt_url").val(url);
+                },
+            });
+
+        }
+    </script>
+    <script>
+        //format currency
+
+        $("input[data-type='currency']").on({
+            keyup: function () {
+                formatCurrency($(this));
+            },
+            blur: function () {
+                formatCurrency($(this), "blur");
+            }
+        });
+
+
+        function formatNumber(n) {
+            // format number 1000000 to 1,234,567
+            return n.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+        }
+
+
+        function formatCurrency(input, blur) {
+            // appends $ to value, validates decimal side
+            // and puts cursor back in right position.
+
+            // get input value
+            var input_val = input.val();
+
+            // don't validate empty input
+            if (input_val === "") { return; }
+
+            // original length
+            var original_len = input_val.length;
+
+            // initial caret position
+            var caret_pos = input.prop("selectionStart");
+
+            // check for decimal
+            if (input_val.indexOf(".") >= 0) {
+
+                // get position of first decimal
+                // this prevents multiple decimals from
+                // being entered
+                var decimal_pos = input_val.indexOf(".");
+
+                // split number by decimal point
+                var left_side = input_val.substring(0, decimal_pos);
+                var right_side = input_val.substring(decimal_pos);
+
+                // add commas to left side of number
+                left_side = formatNumber(left_side);
+
+                // validate right side
+                right_side = formatNumber(right_side);
+
+                // On blur make sure 2 numbers after decimal
+                if (blur === "blur") {
+                    right_side += "00";
+                }
+
+                // Limit decimal to only 2 digits
+                right_side = right_side.substring(0, 2);
+
+                // join number by .
+                input_val = left_side;
+
+            } else {
+                // no decimal entered
+                // add commas to number
+                // remove all non-digits
+                input_val = formatNumber(input_val);
+                input_val = input_val;
+
+                // final formatting
+                if (blur === "blur") {
+                    input_val += "";
+                }
+            }
+
+            // send updated string to input
+            input.val(input_val);
+
+            // put caret back in the right position
+            var updated_len = input_val.length;
+            caret_pos = updated_len - original_len + caret_pos;
+            input[0].setSelectionRange(caret_pos, caret_pos);
+        }
+
+    </script>
+<% include view_tong/bot %>
