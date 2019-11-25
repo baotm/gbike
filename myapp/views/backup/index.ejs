@@ -9,9 +9,7 @@
   <title>Gbikevietnam </title>
   <link href="../vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="../vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
-  <!-- NProgress -->
-  <link href="../vendors/nprogress/nprogress.css" rel="stylesheet">
-  <!-- Custom Theme Style -->
+
   <link href="../build/css/custom.min.css" rel="stylesheet">
 
   <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css">
@@ -52,6 +50,7 @@
 </head>
 
 <body class="nav-md">
+  <div id="div_username" style="display: none;"><%= title %></div>
   <div id="cover"></div>
   <div class="container body">
     <div class="main_container">
@@ -86,12 +85,9 @@
               <ul class="nav side-menu">
                 <li><a><i class="fa fa-home"></i> Home </a>
 
-                </li>
-                <li><a href=""><i class="fa fa-plus"></i> Thêm đồ thế</a>
-
-                </li>
-                <li><a href="quanli/nhanvien"><i class="fa fa-user"></i> Nhân viên</a>
-
+                  <a href=""><i class="fa fa-plus"></i> Thêm đồ thế</a>
+                  <a href="/quanli/nhanvien"><i class="fa fa-user"></i> Nhân viên</a>
+                  <a href="/quanli/nhanvien"><i class="fa fa-money"></i> Quỹ</a>
                 </li>
               </ul>
             </div>
@@ -141,21 +137,29 @@
               <li class="nav-item dropdown open" style="padding-left: 15px;">
                 <a href="javascript:;" class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="false">
                   <i class="fa fa-envelope-o"></i>
-                  <span class="badge bg-green">6</span>
+                  <span class="badge bg-green"><span><%= _noti.length  %></span></span>
                 </a>
                 <ul id="menu1" class="dropdown-menu list-unstyled msg_list" role="menu">
+                  <% for (var i =0; i < _noti.length;  i++ ) { %>
+
                   <li>
                     <a>
-                      <span class="image"><img src="images/img.jpg" alt="Profile Image" /></span>
+                      <span class="image"><img src="<%= _noti[i].pic %>" alt="Profile Image"
+                          style="width:30px;height:30px" /></span>
                       <span>
-                        <span>John Smith</span>
-                        <span class="time">3 mins ago</span>
+                        <span><%= _noti[i].accEdit  %> </span>
+                        <span class="time"><%= _noti[i].timeDiff  %></span>
                       </span>
                       <span class="message">
-                        Film festivals used to be do-or-die moments for movie makers. They were where...
+                        <%=  _noti[i].containt %>
                       </span>
                     </a>
                   </li>
+
+
+                  <% } %>
+
+
 
                   <li>
                     <div class="text-center">
@@ -176,52 +180,11 @@
 
       <!-- page content -->
       <div class="right_col" role="main">
-        <div class="page-title">
-          <div class="title_left">
-            <h3>Thông tin nhân viên</h3>
-          </div>
-        </div>
-        <div class="x_panel">
-          <div class="x_content">
-            <div class="row">
-
-              <% for (var i =0; i < account.length;  i++ ) { %>
-              <div class="col-md-4 col-sm-4 col-xs-12 profile_details">
-                <div class="well profile_view">
-                  <div class="col-sm-12">
-                    <h4 class="brief"><i><%= account[i].role_id %></i></h4>
-                    <div class="left col-md-7 col-sm-7">
-                      <h2>  <%= acc_info[i].name %></h2>
-                      <p><strong>Đ/c: </strong> <%= acc_info[i].address %> </p>
-                      <ul class="list-unstyled">
-                        <li><i class="fa fa-user"></i> Tuổi: <%= acc_info[i].age %></li>
-                        <li><i class="fa fa-facebook"></i> fb: <%= acc_info[i].email %></li>
-                        <li><i class="fa fa-phone"></i> Phone: <%= acc_info[i].phone %></li>
-                      </ul>
-                    </div>
-                    <div class="right col-md-5 col-sm-5">
-                      <img src='<%= acc_info[i].avatar %>' alt=""
-                        class="img-circle img-responsive" style="width: 128px;height: 128px;;">
-                    </div>
-                  </div>
-                  <div class="col-sm-12 bottom text-center">
-
-                    <div class="col-xs-12 col-sm-12">
-                      <a href="nhanvien/profile?id=<%= account[i].id %>">
-                      <button type="button" class="btn btn-primary">
-                        <i class="fa fa-user"> </i> View Profile
-                      </button></a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <% } %>
+      
+      
 
 
-            </div>
-          </div>
-        </div>
+       
       </div>
       <!-- /page content -->
 
@@ -240,29 +203,9 @@
   <script src="../vendors/jquery/dist/jquery.min.js"></script>
   <!-- Bootstrap -->
   <script src="../vendors/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-  <!-- FastClick -->
-  <script src="../vendors/fastclick/lib/fastclick.js"></script>
-  <!-- NProgress -->
-  <script src="../vendors/nprogress/nprogress.js"></script>
-
   <!-- Custom Theme Scripts -->
   <script src="../build/js/custom.js"></script>
 
 </body>
-
-
-<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.js"></script>
-
-
-<script>
-
-  function formatNumber(n) {
-    // format number 1000000 to 1,234,567
-    return n.replace(/\D/g, "").replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-  }
-
-
-</script>
-
 
 </html>
