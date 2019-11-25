@@ -78,7 +78,7 @@ function view_admin(req, res) {
   name = req.session.name;
   _noti = noti_filter(_noti, name);
   info = JSON.parse(req.session.info)
-  res.render('admin_index', { title: name, acc_name: info.name, acc_avatar: info.avatar, _noti })
+  res.render('index', { title: name, acc_name: info.name, acc_avatar: info.avatar, _noti,role:role })
 
 }
 function noti_filter(noti, acc) {
@@ -140,7 +140,7 @@ function view_sale(req, res) {
   name = req.session.name;
   _noti = noti_filter(_noti, name);
   info = JSON.parse(req.session.info)
-  res.render('index', { title: name, acc_name: info.name, acc_avatar: info.avatar, _noti })
+  res.render('index', { title: name, acc_name: info.name, acc_avatar: info.avatar, _noti,role:role })
 }
 function view_tech(req, res) {
   role = 'user';
