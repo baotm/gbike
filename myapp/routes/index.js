@@ -2,7 +2,6 @@ var express = require('express');
 var router = express.Router();
 var mysql = require('sync-mysql')
 
-
 //admin router {}
 
 
@@ -168,6 +167,10 @@ function view_tech(req, res) {
 }
 
 
+
+//---------------------router director-----------------
+
+//index router /
 router.get('/', function (req, res, next) {
   //check login
   if (checkLogin(req)) {
@@ -177,6 +180,164 @@ router.get('/', function (req, res, next) {
   }
 });
 
+// /login router
+router.get('/login', function (req, res) {
+  act = req.query.action;
+  if (req.session.login) {
+    res.render('login', {
+      msg: 'Bạn Đã đăng nhập - vui lòng đăng xuất'
+    })
+  }
+  if (act != null) {
+    switch (act) {
+      case "first": {
+        res.render('login', {
+          msg: 'Have good day!!!'
+        })
+      } break;
+      case "loginfail": {
+        res.render('login', {
+          msg: 'Sai tên đăng nhập hoặc mật khẩu'
+        })
+      } break;
+    }
+  } else {
+    res.render('login?action=first')
+  }
+
+
+})
+//router quanli nhan vien
+router.get('/nhanvien', function (req, res) {
+  //chỉ có admin mới xem được
+  if (checkLogin(req)) {
+    if (checkAdminRole(req)) {
+      result = db_query('SELECT * FROM `account`');
+      var acc = result;
+      var acc_info = new Array();
+      for (i = 0; i < acc.length; i++) {
+        obj = JSON.parse(acc[i].info)
+        acc_info.push(obj);
+      }
+      res.render('nhanvien', { title: name, acc_name: info.name, acc_avatar: info.avatar, account: acc, acc_info: acc_info });
+    }
+  } else {
+    res.redirect('/')
+  }
+
+  if (req.session.login) {
+    //phan chia khu vuc role
+    role = req.session.role;
+    name = req.session.name;
+    var connection = getConnect();
+    result = connection.query('SELECT * FROM `account`');
+    connection.dispose();
+    var acc = result;
+    var acc_info = new Array();
+    for (i = 0; i < acc.length; i++) {
+      obj = JSON.parse(acc[i].info)
+      acc_info.push(obj);
+    }
+
+    //info all
+    if (role == 'admin') {
+      res.render('quanli/nhanvien', { title: name, acc_name: info.name, acc_avatar: info.avatar, account: acc, acc_info: acc_info });
+    } else {
+      res.redirect('/login?action=first')
+    }
+
+  } else {
+    res.redirect('/login?action=first')
+  }
+});
+//router themdothe
+router.get('/themdothe', function (req, res) {
+  if (checkLogin(req)) {
+    query = "SELECT * FROM docam ORDER BY id DESC LIMIT 1;"
+    re = db_query(query)
+    lastid = re[0].id;
+    res.render('themdothe', { lastid: (parseInt(lastid) + 1), title: name, acc_name: info.name, acc_avatar: info.avatar })
+  } else {
+    res.redirect('/login?action=first')
+  }
+})
+//router quan li quy
+router.get('/quy',function(req,res){
+
+  if (checkLogin(req)) {
+    if (checkAdminRole(req)) {
+      res.render('quy', { title: name, acc_name: info.name, acc_avatar: info.avatar, account: acc });
+    }
+  } else {
+    res.redirect('/')
+  }
+});
+//router thong ke
+router.get('/thongke',function(req,res){
+
+  if (checkLogin(req)) {
+    if (checkAdminRole(req)) {
+      res.render('thongke', { title: name, acc_name: info.name, acc_avatar: info.avatar });
+    }
+  } else {
+    res.redirect('/')
+  }
+});
+//router chi tiet profile nhan vien
+router.get('/profile', function (req, res) {
+
+  if (checkLogin(req)) {
+    if (checkAdminRole(req)) {
+      
+      id = req.query.id;
+      result = db_query('SELECT * FROM account WHERE id=' + id);
+      var acc = result;
+      var acc_info = new Array();
+      for (i = 0; i < acc.length; i++) {
+        obj = JSON.parse(acc[i].info)
+        acc_info.push(obj);
+      }
+      res.render('profile', { title: name, acc_name: info.name, acc_avatar: info.avatar, account: acc, acc_info: acc_info });
+    }
+  } else {
+    res.redirect('/')
+  }
+  
+});
+
+//------------------------------------------------------------------------
+
+
+
+//router group by function
+
+//login, logout
+//--------------------------------
+router.get('/logout', function (req, res) {
+  req.session.destroy();
+  res.redirect('/login?action=first');
+});
+router.post('/checklogin', function (req, res) {
+
+  user = req.body.user;
+  pass = req.body.pass;
+  db = getAccount(user, pass);
+  if (db.length > 0) {
+    _db = db[0];
+    req.session.login = true;
+    req.session.acc = _db.info;
+    req.session.role = _db.role_id;
+    req.session.name = _db.user;
+    req.session.info = _db.info;
+    res.redirect('/')
+  } else {
+    res.redirect('/login?action=loginfail')
+  }
+
+});
+//---------------------------------
+
+//pawn function, sekect insert update delete
 router.get('/do_pawn_update', function (req, res) {
   strQuery = decodeURI(req.query.query);
   var connection = getConnect();
@@ -184,24 +345,7 @@ router.get('/do_pawn_update', function (req, res) {
   connection.dispose();
   res.send('200');
 });
-router.get('/logout', function (req, res) {
-  req.session.destroy();
-  res.redirect('/login?action=first');
-});
 
-router.post('/upload_picture', function (req, res) {
-  img = req.body.img;
-  url = "./public/image_pawn/";
-  name = url + decodeURI(req.body.name) + ".png";
-  var base64Data = img.replace(/^data:image\/jpeg;base64,/, "");
-  require("fs").writeFile(name, base64Data, 'base64', function (err) {
-  });
-
-  res.redirect('/upload_picture?name=' + req.body.name)
-});
-router.get('/upload_picture', function (req, res) {
-  res.send(req.query.name)
-});
 router.get('/pawn_submit', function (req, res) {
 
   p = req.query;
@@ -338,6 +482,28 @@ router.get("/do_pawn_donglai", function (req, res) {
   res.send(id + "|" + tienlai + "|" + diff);
 
 });
+//----------------------------------------------------------
+
+//----------picture-------update - edit - delete
+
+router.post('/upload_picture', function (req, res) {
+  img = req.body.img;
+  url = "./public/image_pawn/";
+  name = url + decodeURI(req.body.name) + ".png";
+  var base64Data = img.replace(/^data:image\/jpeg;base64,/, "");
+  require("fs").writeFile(name, base64Data, 'base64', function (err) {
+  });
+
+  res.redirect('/upload_picture?name=' + req.body.name)
+});
+router.get('/upload_picture', function (req, res) {
+  res.send(req.query.name)
+});
+
+//------------------------------------------------------------
+
+//-----------bill themes--------------------------------------
+
 router.get('/bill', function (req, res) {
   name = req.query.name;
   phone = req.query.phone;
@@ -374,24 +540,11 @@ router.get('/bill', function (req, res) {
     item: item
   });
 })
-router.post('/checklogin', function (req, res) {
+//-------------------------------------------------------------
 
-  user = req.body.user;
-  pass = req.body.pass;
-  db = getAccount(user, pass);
-  if (db.length > 0) {
-    _db = db[0];
-    req.session.login = true;
-    req.session.acc = _db.info;
-    req.session.role = _db.role_id;
-    req.session.name = _db.user;
-    req.session.info = _db.info;
-    res.redirect('/')
-  } else {
-    res.redirect('/login?action=loginfail')
-  }
 
-});
+//-----------ajax function-------------------------------------
+
 router.get('/ajax_pawn_item_get', function (req, res) {
   id = req.query.id;
   var connection = getConnect();
@@ -411,126 +564,10 @@ router.get('/ajax_pawn_item_get_all', function (req, res) {
   res.send(_re);
 })
 
-router.get('/login', function (req, res) {
-  act = req.query.action;
-  if (req.session.login) {
-    res.render('login', {
-      msg: 'Bạn Đã đăng nhập - vui lòng đăng xuất'
-    })
-  }
-  if (act != null) {
-    switch (act) {
-      case "first": {
-        res.render('login', {
-          msg: 'Have good day!!!'
-        })
-      } break;
-      case "loginfail": {
-        res.render('login', {
-          msg: 'Sai tên đăng nhập hoặc mật khẩu'
-        })
-      } break;
-    }
-  } else {
-    res.render('login?action=first')
-  }
+
+//-------------------------------------------------------------
 
 
-})
-
-router.get('/nhanvien', function (req, res) {
-  //chỉ có admin mới xem được
-  if (checkLogin(req)) {
-    if (checkAdminRole(req)) {
-      result = db_query('SELECT * FROM `account`');
-      var acc = result;
-      var acc_info = new Array();
-      for (i = 0; i < acc.length; i++) {
-        obj = JSON.parse(acc[i].info)
-        acc_info.push(obj);
-      }
-      res.render('nhanvien', { title: name, acc_name: info.name, acc_avatar: info.avatar, account: acc, acc_info: acc_info });
-    }
-  } else {
-    res.redirect('/')
-  }
-
-  if (req.session.login) {
-    //phan chia khu vuc role
-    role = req.session.role;
-    name = req.session.name;
-    var connection = getConnect();
-    result = connection.query('SELECT * FROM `account`');
-    connection.dispose();
-    var acc = result;
-    var acc_info = new Array();
-    for (i = 0; i < acc.length; i++) {
-      obj = JSON.parse(acc[i].info)
-      acc_info.push(obj);
-    }
-
-    //info all
-    if (role == 'admin') {
-      res.render('quanli/nhanvien', { title: name, acc_name: info.name, acc_avatar: info.avatar, account: acc, acc_info: acc_info });
-    } else {
-      res.redirect('/login?action=first')
-    }
-
-  } else {
-    res.redirect('/login?action=first')
-  }
-});
-
-router.get('/themdothe', function (req, res) {
-  if (checkLogin(req)) {
-    query = "SELECT * FROM docam ORDER BY id DESC LIMIT 1;"
-    re = db_query(query)
-    lastid = re[0].id;
-    res.render('themdothe', { lastid: (parseInt(lastid) + 1), title: name, acc_name: info.name, acc_avatar: info.avatar })
-  } else {
-    res.redirect('/login?action=first')
-  }
-})
-router.get('/quy',function(req,res){
-
-  if (checkLogin(req)) {
-    if (checkAdminRole(req)) {
-      res.render('quy', { title: name, acc_name: info.name, acc_avatar: info.avatar, account: acc });
-    }
-  } else {
-    res.redirect('/')
-  }
-});
-router.get('/thongke',function(req,res){
-
-  if (checkLogin(req)) {
-    if (checkAdminRole(req)) {
-      res.render('thongke', { title: name, acc_name: info.name, acc_avatar: info.avatar });
-    }
-  } else {
-    res.redirect('/')
-  }
-});
-router.get('/profile', function (req, res) {
-
-  if (checkLogin(req)) {
-    if (checkAdminRole(req)) {
-      
-      id = req.query.id;
-      result = db_query('SELECT * FROM account WHERE id=' + id);
-      var acc = result;
-      var acc_info = new Array();
-      for (i = 0; i < acc.length; i++) {
-        obj = JSON.parse(acc[i].info)
-        acc_info.push(obj);
-      }
-      res.render('profile', { title: name, acc_name: info.name, acc_avatar: info.avatar, account: acc, acc_info: acc_info });
-    }
-  } else {
-    res.redirect('/')
-  }
-  
-});
 function diff(start, end) {
 
   var diff = end.getTime() - start.getTime();
